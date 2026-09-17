@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="《页面布局之道》—— 中英双语交互教学网站：讲解 / 关键代码 / 动态演示三合一的页面布局课程" />
+<title>第 6 章 可访问性、原语化与综合案例 · Accessibility, primitives and the case study · 《页面布局之道》</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../assets/styles.css" />
+<link rel="stylesheet" href="../assets/lesson.css" />
+</head>
+<body class="lesson" data-chapter="6">
+<nav class="course-topbar">
+  <a class="brand" href="../"><span class="back">←</span><span data-i18n="nav.home"></span></a>
+  <ul class="tabs">
+    <li data-lang="zh-CN"><a href="../lesson-01/">第 1 章 · 布局是信息设计</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-01/">Ch 1 · Layout Is Information Design</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-02/">第 2 章 · 文档流与盒模型</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-02/">Ch 2 · Flow & Box Model</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-03/">第 3 章 · 一维布局 Flexbox</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-03/">Ch 3 · Flexbox (1D)</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-04/">第 4 章 · 二维布局 Grid</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-04/">Ch 4 · Grid (2D)</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-05/">第 5 章 · 响应式与内在布局</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-05/">Ch 5 · Responsive & Intrinsic</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-06/" class="current">第 6 章 · 可访问性与综合案例</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-06/">Ch 6 · Accessibility & Case Study</a></li>
+  </ul>
+  <div class="lang-switch " role="group" data-i18n-aria="nav.lang.label"></div>
+</nav>
+
+<header class="lesson-header">
+  <div>
+    <h1 data-lang="zh-CN">第 6 章 可访问性、原语化与综合案例</h1>
+    <h1 data-lang="en-US" hidden>Chapter 6 Accessibility, primitives and the case study</h1>
+    <p class="subtitle" data-lang="zh-CN">布局不只是"看起来对"：它决定了键盘能不能用、屏幕阅读器读到的顺序对不对、放大到 200% 会不会崩。最后把全课收束成一个完整案例。</p>
+    <p class="subtitle" data-lang="en-US" hidden>Layout is not only about looking right: it decides whether the keyboard works, whether a screen reader reads the right order, and whether 200% zoom breaks the page. The chapter ends by drawing the whole course together in one case.</p>
+  </div>
+  <div class="header-tip">
+    <span data-lang="zh-CN" data-i18n="tip.sections"></span>
+    <span data-lang="en-US" hidden data-i18n="tip.sections"></span>
+    <br /><span class="kbd">[</span> <span class="kbd">]</span> <span data-lang="zh-CN">切换小节</span><span data-lang="en-US" hidden>sections</span>
+    · <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span> <span data-lang="zh-CN">切换讲解/代码/演示</span><span data-lang="en-US" hidden>explain/code/demo</span>
+  </div>
+</header>
+
+<div class="case-banner">
+  <span>🧩</span>
+  <span data-lang="zh-CN">本章诊断案例的 <b>⑧ DOM 顺序与视觉顺序不一致</b>（用 <code>order</code> 挪动侧栏导致 Tab 顺序错乱），并交付 <b>CourseHub v2</b> 的完整改造与布局评审清单。</span>
+  <span data-lang="en-US" hidden>This chapter diagnoses defect <b>⑧ DOM order ≠ visual order</b> (using <code>order</code> to move the sidebar, which scrambles tab order) and delivers the complete <b>CourseHub v2</b> rebuild plus a layout review checklist.</span>
+</div>
+
+<main class="lesson-main">
+  <aside class="chapter-nav">
+    <h3 data-i18n="nav.toc"></h3>
+    <ul>
+      <li><a href="#ch-6-1" data-chapter="ch-6-1"><span class="n">6.1</span><span data-lang="zh-CN">阅读顺序 vs 视觉顺序</span><span data-lang="en-US" hidden>Reading order versus visual order</span></a></li>
+      <li><a href="#ch-6-2" data-chapter="ch-6-2"><span class="n">6.2</span><span data-lang="zh-CN">缩放、重排与可访问性的硬指标</span><span data-lang="en-US" hidden>Zoom, reflow and the hard accessibility criteria</span></a></li>
+      <li><a href="#ch-6-3" data-chapter="ch-6-3"><span class="n">6.3</span><span data-lang="zh-CN">综合案例：CourseHub 从 v1 到 v2</span><span data-lang="en-US" hidden>The full case: CourseHub from v1 to v2</span></a></li>
+    </ul>
+    <div class="nav-tip">
+      <a href="../supplementary/" data-i18n="common.demo-index"></a>
+      <a href="../" data-i18n="common.portal"></a>
+    </div>
+  </aside>
+
+  <section class="chapter-content">
+
+    <article class="chapter" id="ch-6-1">
+      <h2 data-lang="zh-CN">6.1 阅读顺序 vs 视觉顺序</h2>
+      <h2 data-lang="en-US" hidden>6.1 Reading order versus visual order</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">CSS 能自由改变视觉位置，但键盘用户和屏幕阅读器只看 DOM 顺序。这两者分叉的地方，就是可访问性事故的高发区。</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>CSS can move anything visually, but keyboard users and screen readers only see DOM order. Where the two diverge, accessibility breaks.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">布局技术越强，"视觉顺序"与"DOM 顺序"就越容易分叉。分叉本身不是错误——<b>错误的是把它用在影响阅读或操作顺序的地方</b>。要理解这件事，先要看清三套"顺序"：</p><p data-lang="en-US" hidden>The more powerful the layout technique, the easier it is for visual order and DOM order to diverge. Divergence is not itself a mistake — <b>the mistake is using it where it affects reading or operation order</b>. To see why, separate three orders:</p>
+<table class="mini" data-lang="zh-CN"><thead><tr><th>顺序</th><th>由谁决定</th><th>用户如何感知</th></tr></thead><tbody><tr><td><b>DOM 顺序</b></td><td>HTML 里元素的先后</td><td>屏幕阅读器的朗读顺序；Tab 键的切换顺序；复制粘贴的顺序</td></tr><tr><td><b>视觉顺序</b></td><td>CSS 决定的屏幕位置</td><td>视力用户的阅读路径（左上 → 右下）</td></tr><tr><td><b>焦点顺序</b></td><td>默认跟随 DOM 顺序（<code>tabindex</code> 可改）</td><td>键盘用户的导航顺序</td></tr></tbody></table><table class="mini" data-lang="en-US" hidden><thead><tr><th>Order</th><th>Determined by</th><th>How users perceive it</th></tr></thead><tbody><tr><td><b>DOM order</b></td><td>The sequence in the HTML</td><td>Screen-reader narration order, tab order, copy-paste order</td></tr><tr><td><b>Visual order</b></td><td>On-screen positions decided by CSS</td><td>The reading path of sighted users (top-left → bottom-right)</td></tr><tr><td><b>Focus order</b></td><td>Follows DOM order by default (<code>tabindex</code> can change it)</td><td>Navigation order for keyboard users</td></tr></tbody></table>
+<p data-lang="zh-CN"><b>线性化（linearisation）</b>是理解这一切的关键概念：屏幕阅读器会把页面<b>压平成一个一维序列</b>来朗读。所以只要视觉顺序与 DOM 顺序不同，视力用户和屏幕阅读器用户就获得了<b>两份不同的信息</b>——而其中一份是错的。</p><p data-lang="en-US" hidden><b>Linearisation</b> is the key concept: a screen reader <b>flattens the page into a one-dimensional sequence</b> to read aloud. So whenever visual order differs from DOM order, sighted users and screen-reader users receive <b>two different documents</b> — and one of them is wrong.</p>
+<div class="theory-card" data-lang="zh-CN"><strong>🧠 理论支点：</strong><b>WCAG 2.4.3 焦点顺序（AA）</b>要求：如果页面可以被顺序导航，焦点顺序必须<b>保持含义与可操作性</b>。换句话说：视觉上第 1、2、3 个东西，键盘上也应该是第 1、2、3 个。这条标准不禁止视觉重排，它只要求<b>重排不要把语义搞乱</b>。<cite>WCAG 2.2 · 2.4.3 Focus Order；MDN「CSS and accessibility: ordering」</cite></div><div class="theory-card" data-lang="en-US" hidden><strong>🧠 Theory: </strong><b>WCAG 2.4.3 Focus Order (AA)</b> requires that if a page can be navigated sequentially, the focus order <b>preserves meaning and operability</b>. In other words: if something is first, second, third visually, it should be first, second, third for the keyboard. The criterion does not forbid visual reordering; it requires that <b>reordering does not scramble meaning</b>.<cite>WCAG 2.2 · 2.4.3 Focus Order; MDN "CSS and accessibility: ordering"</cite></div>
+<h3 data-lang="zh-CN">三个常见陷阱</h3><h3 data-lang="en-US" hidden>Three common traps</h3>
+<ul data-lang="zh-CN"><li><b><code>order</code> 挪动交互元素</b>：把"删除"按钮用 <code>order: -1</code> 挪到视觉最前面，键盘用户却要按到最后才碰到它。</li><li><b><code>row-reverse</code> 处理"从右到左"</b>：视觉上反了，Tab 顺序没反 → 焦点从右侧跳到左侧。正确做法是用 <code>direction: rtl</code> 或直接写对 DOM 顺序。</li><li><b>用两套 DOM + <code>display: none</code> 切换布局</b>：v1 的常见做法。它同时带来重复内容、状态不同步、以及"隐藏的那份仍可能被读到"的风险。</li></ul><ul data-lang="en-US" hidden><li><b>Moving interactive elements with <code>order</code></b>: an <code>order: -1</code> delete button appears first visually but keyboard users reach it last.</li><li><b><code>row-reverse</code> for right-to-left layouts</b>: visually reversed but tab order is not, so focus jumps from right to left. Use <code>direction: rtl</code>, or simply write the DOM in the right order.</li><li><b>Two DOM copies toggled by <code>display: none</code></b>: a common v1 pattern. It brings duplicated content, state that drifts out of sync, and the risk that the hidden copy is still announced.</li></ul>
+<p class="note" data-lang="zh-CN"><b>一条足够用的规则</b>：让 DOM 顺序按<b>最线性的那个版本</b>写（通常是手机单列版，或"最重要优先"的顺序），然后用 Grid / Flex 在宽屏上做<b>视觉重排</b>。这样两个顺序在最重要的场景下天然一致，重排只发生在"空间充裕、肉眼可见"的情形里。第 4 章的 <code>grid-template-areas</code> 之所以被称为"布局契约"，正是因为它的使用方式天然符合这条规则。</p><p class="note" data-lang="en-US" hidden><b>A rule that is sufficient in practice</b>: author DOM order for <b>the most linear version</b> (usually the phone single-column layout, or "most important first"), then reorder <b>visually</b> with grid or flex on wide screens. The two orders then agree by construction in the most critical scenario, and reordering only happens where there is visible space. This is exactly why <code>grid-template-areas</code> from Chapter 4 deserves the name "layout contract".</p>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 案例诊断：问题 ⑧ 用 order 挪动侧栏</span>v1 为了让侧栏在桌面上出现在右边，给侧栏加了 <code>order: 2</code>、给主区加了 <code>order: 1</code>（DOM 里侧栏在前）。结果是：<b>视觉上</b>侧栏在右、主区在左（符合设计稿）；<b>键盘上</b>Tab 会先进入侧栏的搜索框和筛选器，再跳到主区，然后按视觉顺序回到右侧——用户会觉得"焦点在乱跳"，而屏幕阅读器会把侧栏读在正文之前，语义完全颠倒。v2 的做法是<b>把 DOM 顺序改成"主区在前"</b>（也就是手机版的阅读顺序），桌面端用 <code>grid-template-areas</code> 把侧栏放到右侧，两个顺序从此一致。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 Case diagnosis: defect ⑧ moving the sidebar with order</span>To put the sidebar on the right on desktop, v1 adds <code>order: 2</code> to the sidebar and <code>order: 1</code> to the main area (while the DOM has the sidebar first). The result: <b>visually</b> the sidebar is right and the main area left (matching the design); <b>on the keyboard</b>, Tab enters the sidebar’s search box and filters first, then jumps to the main area and back to the right — the focus appears to jump randomly — and a screen reader reads the sidebar before the body copy, inverting the semantics. The v2 fix is to <b>put the main area first in the DOM</b> (which is also the phone reading order) and place the sidebar on the right with <code>grid-template-areas</code>, so both orders agree.</div>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① 用 Grid 重排，而不是用 order 打乱</h3><h3 data-lang="en-US" hidden>Key code ① Reorder with grid, not with order</h3>
+<p class="code-purpose" data-lang="zh-CN">同样的视觉效果，一种写法破坏可访问性，另一种不会。差别只在于改的是"位置"还是"顺序"。</p><p class="code-purpose" data-lang="en-US" hidden>The same visual result: one implementation breaks accessibility, the other does not. The difference is whether you change position or sequence.</p>
+<pre data-lang="zh-CN"><code><span class="cmt">/* ❌ v1：DOM 里 side 在前，用 order 把它挤到右边 —— 焦点顺序跟着 DOM 走，于是乱跳 */</span>
+<span class="sel">.layout</span> { <span class="prop">display</span>: flex; }
+<span class="sel">.layout &gt; .main</span> { <span class="prop">order</span>: <span class="num">1</span>; }
+<span class="sel">.layout &gt; .side</span> { <span class="prop">order</span>: <span class="num">2</span>; }
+
+<span class="cmt">/* ✅ v2：DOM 里 main 在前（= 手机阅读顺序），桌面端用 areas 放到右边 */</span>
+<span class="sel">.layout</span> {
+  <span class="prop">display</span>: grid;
+  <span class="prop">grid-template-areas</span>: <span class="str">"main side"</span>;
+  <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>) <span class="num">15rem</span>;
+  <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+}
+<span class="sel">.layout &gt; .main</span> { <span class="prop">grid-area</span>: main; <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.layout &gt; .side</span> { <span class="prop">grid-area</span>: side; }
+
+/* DOM：
+   &lt;main class=<span class="str">"main"</span>&gt;…&lt;/main&gt;
+   &lt;aside class=<span class="str">"side"</span>&gt;…&lt;/aside&gt;     ← 侧栏在后，键盘在正文之后到达 */
+
+<span class="hl-line">/* <span class="star">⭐</span> 关键点：手机单列时无需任何 CSS 改动 —— areas 换成单列即可，</span>
+   DOM 顺序始终是<span class="str">"正文 → 侧栏"</span>，两个顺序永远一致 */</code></pre><pre data-lang="en-US" hidden><code><span class="cmt">/* ❌ v1: side comes first in the DOM and order pushes it right — focus follows the DOM, so it jumps */</span>
+<span class="sel">.layout</span> { <span class="prop">display</span>: flex; }
+<span class="sel">.layout &gt; .main</span> { <span class="prop">order</span>: <span class="num">1</span>; }
+<span class="sel">.layout &gt; .side</span> { <span class="prop">order</span>: <span class="num">2</span>; }
+
+<span class="cmt">/* ✅ v2: main comes first in the DOM (= the phone reading order); areas place the sidebar right on desktop */</span>
+<span class="sel">.layout</span> {
+  <span class="prop">display</span>: grid;
+  <span class="prop">grid-template-areas</span>: <span class="str">"main side"</span>;
+  <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>) <span class="num">15rem</span>;
+  <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+}
+<span class="sel">.layout &gt; .main</span> { <span class="prop">grid-area</span>: main; <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.layout &gt; .side</span> { <span class="prop">grid-area</span>: side; }
+
+/* <span class="prop">DOM</span>:
+   &lt;main class=<span class="str">"main"</span>&gt;…&lt;/main&gt;
+   &lt;aside class=<span class="str">"side"</span>&gt;…&lt;/aside&gt;     ← sidebar later, so the keyboard reaches it after the body */
+
+<span class="hl-line">/* <span class="star">⭐</span> Key <span class="prop">point</span>: the phone single-column layout needs no extra CSS — just switch the areas,</span>
+   and DOM order stays <span class="str">"body → sidebar"</span>, so the two orders never diverge */</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong><b>为什么"改位置"比"改顺序"安全？</b>因为 Grid 只改变元素<b>画在哪里</b>，不改变它在文档里的<b>次序</b>；而 <code>order</code> / <code>row-reverse</code> 改变的是<i>布局算法内部的排序</i>，于是视觉顺序与文档顺序同时被改写、彼此脱节。<b>经验法则</b>：需要在多个屏幕尺寸下切换顺序时，用 Grid 的 areas；只为了"微调位置"时，用 <code>margin</code> 或对齐属性，别动顺序。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong><b>Why is changing position safer than changing sequence?</b> Grid only changes <b>where</b> an element is painted, not <b>when</b> it occurs in the document; <code>order</code> and <code>row-reverse</code> change the ordering <i>inside the layout algorithm</i>, so the visual order is rewritten while the document order is not, and the two come apart. <b>Rule of thumb</b>: switch order across screen sizes with grid areas; for pure positioning use margins or alignment properties and leave sequence alone.</p>
+<h3 data-lang="zh-CN">关键代码 ② 让隐藏的内容真的"消失"</h3><h3 data-lang="en-US" hidden>Key code ② Make hidden content actually disappear</h3>
+<p class="code-purpose" data-lang="zh-CN">响应式布局经常要"藏起一部分"，藏的方式决定了它会不会被读到、会不会被 Tab 到。</p><p class="code-purpose" data-lang="en-US" hidden>Responsive layouts constantly hide things; how you hide decides whether it is still announced or still focusable.</p>
+<pre data-lang="zh-CN"><code><span class="cmt">/* ❌ 位移出屏幕：内容仍然在可访问性树里，Tab 仍能聚焦，屏幕阅读器仍会朗读 */</span>
+<span class="sel">.offscreen</span> { <span class="prop">position</span>: absolute; <span class="prop">left</span>: <span class="num">-9999px</span>; }
+
+<span class="cmt">/* ❌ 高度为 0 + overflow hidden：有些辅助技术仍会读到 */</span>
+<span class="sel">.collapsed</span> { <span class="prop">height</span>: <span class="num">0</span>; <span class="prop">overflow</span>: hidden; }
+
+<span class="cmt">/* ✅ 真正移除：display: none（从可访问性树中移除，不可聚焦） */</span>
+<span class="sel">.hidden</span> { <span class="prop">display</span>: none; }
+
+<span class="cmt">/* ✅ 视觉隐藏但保留给屏幕阅读器（用于"跳到主内容"这类链接） */</span>
+<span class="sel">.sr-only</span> {
+  <span class="prop">position</span>: absolute;
+  <span class="prop">width</span>: <span class="num">1px</span>; <span class="prop">height</span>: <span class="num">1px</span>;
+  <span class="prop">padding</span>: <span class="num">0</span>; <span class="prop">margin</span>: <span class="num">-1px</span>;
+  <span class="prop">overflow</span>: hidden;
+  <span class="prop">clip-path</span>: inset(<span class="num">50%</span>);
+  <span class="prop">white-space</span>: nowrap;
+  <span class="prop">border</span>: <span class="num">0</span>;
+}
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点：响应式隐藏要"成对"——宽屏藏掉的导航，窄屏必须有等价入口 */</span></span>
+<span class="at">@media</span> (<span class="prop">min-width</span>: <span class="num">64rem</span>) { .nav-drawer-toggle { <span class="prop">display</span>: none; } }</code></pre><pre data-lang="en-US" hidden><code><span class="cmt">/* ❌ Pushed off-screen: still in the accessibility tree, still focusable, still announced */</span>
+<span class="sel">.offscreen</span> { <span class="prop">position</span>: absolute; <span class="prop">left</span>: <span class="num">-9999px</span>; }
+
+<span class="cmt">/* ❌ Zero height with overflow hidden: some assistive tech still reads it */</span>
+<span class="sel">.collapsed</span> { <span class="prop">height</span>: <span class="num">0</span>; <span class="prop">overflow</span>: hidden; }
+
+<span class="cmt">/* ✅ Truly removed: display: none (out of the accessibility tree, not focusable) */</span>
+<span class="sel">.hidden</span> { <span class="prop">display</span>: none; }
+
+<span class="cmt">/* ✅ Visually hidden but available to screen readers (for a "skip to content" link) */</span>
+<span class="sel">.sr-only</span> {
+  <span class="prop">position</span>: absolute;
+  <span class="prop">width</span>: <span class="num">1px</span>; <span class="prop">height</span>: <span class="num">1px</span>;
+  <span class="prop">padding</span>: <span class="num">0</span>; <span class="prop">margin</span>: <span class="num">-1px</span>;
+  <span class="prop">overflow</span>: hidden;
+  <span class="prop">clip-path</span>: inset(<span class="num">50%</span>);
+  <span class="prop">white-space</span>: nowrap;
+  <span class="prop">border</span>: <span class="num">0</span>;
+}
+
+<span class="hl-line">/* <span class="star">⭐</span> Key <span class="prop">point</span>: responsive hiding must come in pairs — whatever the wide layout hides,</span>
+   the narrow layout must offer an equivalent route to */
+<span class="at">@media</span> (<span class="prop">min-width</span>: <span class="num">64rem</span>) { .nav-drawer-toggle { <span class="prop">display</span>: none; } }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong><code>.sr-only</code> 这个模式值得记住：它是"给屏幕阅读器的，不给眼睛的"内容。典型用法是页面开头的"跳到主要内容"链接（键盘用户按 Tab 第一下就能跳过导航），以及图标按钮的文本标签。<b>坑</b>：不要用它来"藏"不应该存在的内容——如果一段内容对辅助技术也毫无意义（比如纯装饰图形），正确的做法是 <code>aria-hidden="true"</code> 加空 <code>alt</code>，而不是视觉隐藏。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>The <code>.sr-only</code> pattern is worth remembering: content for screen readers but not for the eyes. Typical uses are a "skip to content" link at the top of the page (one Tab press lets keyboard users bypass the navigation) and text labels for icon buttons. <b>Pitfall</b>: do not use it to hide content that should not exist at all — if something is meaningless to assistive tech too (a purely decorative graphic), the correct answer is <code>aria-hidden="true"</code> with an empty <code>alt</code>, not visual hiding.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 切换"用 order 强改顺序"与"用 grid 重排"，实时对比三套顺序（DOM 顺序 / 视觉顺序 / 焦点顺序）；点"播放 Tab 顺序"会真的依次聚焦每个元素，看焦点是否与视觉顺序一致。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Switch between "reorder with order" and "reorder with grid" and compare three orders live: DOM order, visual order and focus order. "Play tab order" really focuses each element in turn so you can see whether focus follows what you see.</p><div class="demo-mount" data-demo="d-6-1"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch-6-2">
+      <h2 data-lang="zh-CN">6.2 缩放、重排与可访问性的硬指标</h2>
+      <h2 data-lang="en-US" hidden>6.2 Zoom, reflow and the hard accessibility criteria</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">四条可以自动化检查的标准：Reflow、Resize Text、Text Spacing、Target Size。它们把"布局好不好"变成"能不能通过"。</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>Four criteria you can check automatically: Reflow, Resize Text, Text Spacing and Target Size. They turn "is this layout good" into "does it pass".</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">布局的可访问性问题大多不是"能不能用"，而是<b>在特定条件下能不能用</b>：放大到 200% 字号、把视口压到 320px、用户用了自定义的文本间距、用户强制使用高对比度模式。WCAG 把这些条件写成了可测的标准，于是布局有了明确的验收线。</p><p data-lang="en-US" hidden>Layout accessibility problems are rarely about "does it work" and almost always about <b>whether it still works under specific conditions</b>: 200% text, a 320px viewport, a user’s custom text spacing, forced high-contrast mode. WCAG turns those conditions into testable criteria, which gives layout a concrete acceptance line.</p>
+<table class="mini" data-lang="zh-CN"><thead><tr><th>标准</th><th>要求</th><th>怎么测</th><th>布局上怎么满足</th></tr></thead><tbody><tr><td><b>1.4.10 重排</b><br />Reflow (AA)</td><td>在 320px 宽度（相当于 400% 缩放）下，内容不需要双向滚动即可阅读</td><td>把视口设成 320px，检查有没有横向滚动条</td><td>用相对单位、<code>min(100%, …)</code>、<code>auto-fit</code>、<code>min-width: 0</code>；避免固定宽度与绝对定位</td></tr><tr><td><b>1.4.4 调整文本大小</b><br />Resize Text (AA)</td><td>文本可放大到 200% 而不丢失内容或功能</td><td>浏览器缩放 200%，或把根字号调到 32px</td><td>用 <code>rem</code> / <code>em</code> 而不是 <code>px</code>；<code>clamp()</code> 的上下限也要用 <code>rem</code></td></tr><tr><td><b>1.4.12 文本间距</b><br />Text Spacing (AA)</td><td>用户设置行高 1.5×、段距 2×、字距 0.12em、词距 0.16em 时，内容不丢失</td><td>注入这些样式，检查是否截断或重叠</td><td>不用固定高度装文本；容器高度交给内容（第 2 章）</td></tr><tr><td><b>2.5.8 目标尺寸</b><br />Target Size (AA)</td><td>指针目标至少 24×24px（2.5.5 AAA 要求 44×44px）</td><td>量所有按钮/链接的包围盒</td><td>用 padding 而不是只靠文字尺寸撑开目标</td></tr></tbody></table><table class="mini" data-lang="en-US" hidden><thead><tr><th>Criterion</th><th>Requirement</th><th>How to test</th><th>Layout answer</th></tr></thead><tbody><tr><td><b>1.4.10 Reflow</b><br />(AA)</td><td>At 320px wide (equivalent to 400% zoom) content is readable without scrolling in two directions</td><td>Set the viewport to 320px and check for a horizontal scrollbar</td><td>Relative units, <code>min(100%, …)</code>, <code>auto-fit</code>, <code>min-width: 0</code>; avoid fixed widths and absolute positioning</td></tr><tr><td><b>1.4.4 Resize Text</b><br />(AA)</td><td>Text can be resized to 200% without loss of content or functionality</td><td>Zoom the browser to 200%, or set the root font size to 32px</td><td>Use <code>rem</code>/<code>em</code> rather than <code>px</code>; express <code>clamp()</code> bounds in <code>rem</code> too</td></tr><tr><td><b>1.4.12 Text Spacing</b><br />(AA)</td><td>No loss of content when the user sets line height 1.5×, paragraph spacing 2×, letter spacing 0.12em and word spacing 0.16em</td><td>Inject those styles and check for clipping or overlap</td><td>Never use a fixed height for text containers; let content own the height (Chapter 2)</td></tr><tr><td><b>2.5.8 Target Size</b><br />(AA)</td><td>Pointer targets at least 24×24px (2.5.5 AAA asks for 44×44px)</td><td>Measure the bounding box of every button and link</td><td>Use padding to grow the target instead of relying on the text size</td></tr></tbody></table>
+<div class="theory-card" data-lang="zh-CN"><strong>🧠 理论支点：</strong><b>为什么是 320px？</b>因为 1280px 的视口放大到 400% 时，逻辑宽度正好是 320px——也就是说 320px 这一条标准实际上在保护<b>低视力用户使用桌面浏览器放大</b>的场景，而不仅是小屏手机。同理，"200% 字号"保护的是把系统默认字号调大的用户（这在低视力与老年用户中非常普遍）。<b>这些标准的共同点：它们都在测试"当用户改变了某个默认值之后，你的布局还在不在"。</b><cite>WCAG 2.2 1.4.10 / 1.4.4 / 1.4.12 / 2.5.8；W3C《Understanding Success Criterion 1.4.10 Reflow》</cite></div><div class="theory-card" data-lang="en-US" hidden><strong>🧠 Theory: </strong><b>Why 320px?</b> Because a 1280px viewport at 400% zoom has a logical width of exactly 320px — so this criterion protects <b>low-vision desktop users who zoom</b>, not just small phones. Likewise, "200% text" protects users who raise their system font size, which is very common among low-vision and older users. <b>What these criteria share: they all test whether your layout survives after the user changes a default.</b><cite>WCAG 2.2 1.4.10 / 1.4.4 / 1.4.12 / 2.5.8; W3C "Understanding Success Criterion 1.4.10 Reflow"</cite></div>
+<p class="note" data-lang="zh-CN"><b>把可访问性检查变成构建流程的一部分。</b>这四条标准都可以自动化：横向溢出用 <code>scrollWidth &gt; clientWidth</code> 检测、点击目标量 <code>getBoundingClientRect()</code>、文本间距用注入样式表检测、放大用根字号变化检测。6.2 的演示把这四条做成了一个"压力测试台"，你可以先在自己的页面上跑一遍，再决定哪里需要改。</p><p class="note" data-lang="en-US" hidden><b>Make accessibility checks part of the build.</b> All four criteria can be automated: horizontal overflow via <code>scrollWidth &gt; clientWidth</code>, target size via <code>getBoundingClientRect()</code>, text spacing via an injected stylesheet, and zoom via a root font-size change. The 6.2 demo assembles them into a stress-test bench you can run against your own page before deciding what to fix.</p>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 案例诊断：v1 的四条标准全部不合格</span>用 6.2 的压力测试台跑 CourseHub v1：<b>1.4.10</b> 在 320px 下横向溢出 860px（固定宽度容器）；<b>1.4.4</b> 根字号调到 32px 后卡片标题被两行截断（固定行高）；<b>1.4.12</b> 注入文本间距后导航项重叠（固定高度导航）；<b>2.5.8</b> 导航链接高 18px（只有内边距 2px）。四条全部不合格。v2 用第 2–5 章的手段逐条修复，压力测试台全部通过。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 Case diagnosis: v1 fails all four criteria</span>Running the 6.2 bench against CourseHub v1: <b>1.4.10</b> overflows horizontally by 860px at 320px (fixed-width container); <b>1.4.4</b> at a 32px root font size the card titles are clipped to two lines (fixed line height); <b>1.4.12</b> with injected text spacing the nav items overlap (fixed-height nav); <b>2.5.8</b> nav links are 18px tall (only 2px of padding). All four fail. Version 2 fixes them with the techniques from Chapters 2–5 and passes the whole bench.</div>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① 一行 CSS：让布局能扛住用户的自定义</h3><h3 data-lang="en-US" hidden>Key code ① One line that makes layouts survive user overrides</h3>
+<p class="code-purpose" data-lang="zh-CN">对抗"用户把我的样式改了"的最好办法，是一开始就不写脆弱的样式。</p><p class="code-purpose" data-lang="en-US" hidden>The best defence against "the user changed my styles" is to avoid brittle styles in the first place.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ①：文本容器永远不要写死高度 —— 这是 1.4.4 与 1.4.12 的共同底线 */</span></span>
+<span class="sel">.card__title</span> { <span class="prop">min-height</span>: <span class="num">0</span>; }        <span class="cmt">/* 允许它长高 */</span>
+<span class="sel">.truncate-2</span> { <span class="prop">-webkit-line-clamp</span>: <span class="num">2</span>; } <span class="cmt">/* 如果确实要截断，明确写出来并给出 title 属性 */</span>
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ②：字号与间距全部用相对单位，用户的根字号设置才能生效 */</span></span>
+<span class="sel">:root</span> { <span class="prop">font-size</span>: <span class="num">100%</span>; }             <span class="cmt">/* 不要写 font-size: 16px —— 那会锁定用户设置 */</span>
+<span class="sel">h1</span> { <span class="prop">font-size</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.1rem</span> + <span class="num">2.4vw</span>, <span class="num">3rem</span>); }
+<span class="sel">.section</span> { <span class="prop">padding-block</span>: clamp(<span class="num">2rem</span>, <span class="num">5vw</span>, <span class="num">4rem</span>); }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ③：给所有可点击元素一个"物理下限"的点击区域（2.5.8） */</span></span>
+<span class="sel">a.inline-link, .icon-btn</span> {
+  <span class="prop">display</span>: inline-flex;
+  <span class="prop">align-items</span>: center;
+  <span class="prop">min-height</span>: <span class="num">24px</span>;                    <span class="cmt">/* AA；移动端建议 44px */</span>
+  <span class="prop">padding-block</span>: <span class="num">6px</span>;
+}
+<span class="sel">.icon-btn</span> { <span class="prop">min-width</span>: <span class="num">24px</span>; <span class="prop">justify-content</span>: center; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ④：长内容永远不要撑破容器（1.4.10 的地板） */</span></span>
+<span class="sel">*</span> { <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">img, video, table</span> { <span class="prop">max-width</span>: <span class="num">100%</span>; }</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ①: never give a text container a fixed height — the shared floor of 1.4.4 and 1.4.12 */</span></span>
+<span class="sel">.card__title</span> { <span class="prop">min-height</span>: <span class="num">0</span>; }        <span class="cmt">/* let it grow */</span>
+<span class="sel">.truncate-2</span> { <span class="prop">-webkit-line-clamp</span>: <span class="num">2</span>; } <span class="cmt">/* if you really must clip, do it explicitly and add a title attribute */</span>
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ②: express type and spacing in relative units so the user’s root font size applies */</span></span>
+<span class="sel">:root</span> { <span class="prop">font-size</span>: <span class="num">100%</span>; }             <span class="cmt">/* never font-size: 16px — that locks the user’s setting */</span>
+<span class="sel">h1</span> { <span class="prop">font-size</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.1rem</span> + <span class="num">2.4vw</span>, <span class="num">3rem</span>); }
+<span class="sel">.section</span> { <span class="prop">padding-block</span>: clamp(<span class="num">2rem</span>, <span class="num">5vw</span>, <span class="num">4rem</span>); }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ③: give every clickable thing a physical minimum target (2.5.8) */</span></span>
+<span class="sel">a.inline-link, .icon-btn</span> {
+  <span class="prop">display</span>: inline-flex;
+  <span class="prop">align-items</span>: center;
+  <span class="prop">min-height</span>: <span class="num">24px</span>;                    <span class="cmt">/* AA; 44px is recommended on touch */</span>
+  <span class="prop">padding-block</span>: <span class="num">6px</span>;
+}
+<span class="sel">.icon-btn</span> { <span class="prop">min-width</span>: <span class="num">24px</span>; <span class="prop">justify-content</span>: center; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ④: long content must never break the container (the floor of 1.4.10) */</span></span>
+<span class="sel">*</span> { <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">img, video, table</span> { <span class="prop">max-width</span>: <span class="num">100%</span>; }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong><b>关于 <code>* { min-width: 0 }</code></b>：这是一个有争议但有效的全局兜底。它解决的是第 3 章那个 flex/grid 项目的隐含最小尺寸问题，代价是可能让某些确实需要"最小内容宽度"的元素被压得过窄。<b>更精确的做法</b>是只在可能装长内容的容器上加（卡片、列表项、<code>td</code>）。<b>关于 <code>:root { font-size: 100% }</code></b>：它把根字号交还给用户设置；如果你写 <code>16px</code>，用户把系统字号调到 20px 时页面纹丝不动——这正是 1.4.4 想避免的情况。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong><b>On <code>* { min-width: 0 }</code></b>: a debatable but effective global floor. It solves the implicit minimum size of flex and grid items from Chapter 3, at the cost of letting some elements be squeezed narrower than they need. <b>More precise</b>: apply it only to containers that may hold long content (cards, list items, <code>td</code>). <b>On <code>:root { font-size: 100% }</code></b>: it hands the root size back to the user’s setting. Writing <code>16px</code> means a user who sets 20px sees no change at all — exactly what 1.4.4 exists to prevent.</p>
+<h3 data-lang="zh-CN">关键代码 ② 可访问性回归测试脚本（可直接用）</h3><h3 data-lang="en-US" hidden>Key code ② An accessibility regression script you can actually use</h3>
+<p class="code-purpose" data-lang="zh-CN">把四条标准写成可以重复运行的检查，改完代码跑一次就知道有没有退步。</p><p class="code-purpose" data-lang="en-US" hidden>Turn the four criteria into repeatable checks so a change that regresses them is caught immediately.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">// <span class="star">⭐</span> 关键点 ①：横向溢出（WCAG 1.4.10）—— 在 320px 容器里量</span></span>
+<span class="kw">function</span> <span class="fn">checkReflow</span>(root) {
+  <span class="kw">const</span> before = root.style.width;
+  root.style.width = <span class="str">'320px'</span>;
+  <span class="kw">const</span> doc = root.ownerDocument.scrollingElement;
+  <span class="kw">const</span> overflow = doc.scrollWidth - doc.clientWidth;   <span class="cmt">// &gt; 0 即不合格</span>
+  root.style.width = before;
+  <span class="kw">return</span> overflow &lt;= <span class="num">1</span>;
+}
+
+<span class="hl-line"><span class="cmt">// <span class="star">⭐</span> 关键点 ②：点击目标尺寸（WCAG 2.5.8）</span></span>
+<span class="kw">function</span> <span class="fn">checkTargets</span>(root, min = <span class="num">24</span>) {
+  <span class="kw">return</span> Array.<span class="kw">from</span>(root.<span class="fn">querySelectorAll</span>(<span class="str">'a, button, input, select'</span>))
+    .<span class="fn">filter</span>(el =&gt; el.offsetParent !== <span class="kw">null</span>)              <span class="cmt">// 只看可见元素</span>
+    .<span class="fn">map</span>(el =&gt; { <span class="kw">const</span> r = el.<span class="fn">getBoundingClientRect</span>(); <span class="kw">return</span> { el, w: r.width, h: r.height }; })
+    .<span class="fn">filter</span>(t =&gt; t.h &lt; min || t.w &lt; min);                <span class="cmt">// 返回不合格清单</span>
+}
+
+<span class="hl-line"><span class="cmt">// <span class="star">⭐</span> 关键点 ③：文本间距（WCAG 1.4.12）—— 注入样式后看是否溢出</span></span>
+<span class="kw">function</span> <span class="fn">checkTextSpacing</span>(root) {
+  <span class="kw">const</span> s = document.<span class="fn">createElement</span>(<span class="str">'style'</span>);
+  s.textContent = <span class="str">'* { line-height: 1.5 !important; letter-spacing: 0.12em !important;'</span> +
+                  <span class="str">'    word-spacing: 0.16em !important; } p { margin-block-end: 2em !important; }'</span>;
+  document.head.<span class="fn">append</span>(s);
+  <span class="kw">const</span> clipped = Array.<span class="kw">from</span>(root.<span class="fn">querySelectorAll</span>(<span class="str">'*'</span>))
+    .<span class="fn">filter</span>(el =&gt; el.scrollHeight &gt; el.clientHeight + <span class="num">2</span> &amp;&amp; <span class="fn">getComputedStyle</span>(el).overflow !== <span class="str">'visible'</span>);
+  s.<span class="fn">remove</span>();
+  <span class="kw">return</span> clipped;
+}</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">// <span class="star">⭐</span> Key point ①: horizontal overflow (WCAG 1.4.10) — measured inside a 320px container</span></span>
+<span class="kw">function</span> <span class="fn">checkReflow</span>(root) {
+  <span class="kw">const</span> before = root.style.width;
+  root.style.width = <span class="str">'320px'</span>;
+  <span class="kw">const</span> doc = root.ownerDocument.scrollingElement;
+  <span class="kw">const</span> overflow = doc.scrollWidth - doc.clientWidth;   <span class="cmt">// anything &gt; 0 fails</span>
+  root.style.width = before;
+  <span class="kw">return</span> overflow &lt;= <span class="num">1</span>;
+}
+
+<span class="hl-line"><span class="cmt">// <span class="star">⭐</span> Key point ②: target size (WCAG 2.5.8)</span></span>
+<span class="kw">function</span> <span class="fn">checkTargets</span>(root, min = <span class="num">24</span>) {
+  <span class="kw">return</span> Array.<span class="kw">from</span>(root.<span class="fn">querySelectorAll</span>(<span class="str">'a, button, input, select'</span>))
+    .<span class="fn">filter</span>(el =&gt; el.offsetParent !== <span class="kw">null</span>)              <span class="cmt">// visible only</span>
+    .<span class="fn">map</span>(el =&gt; { <span class="kw">const</span> r = el.<span class="fn">getBoundingClientRect</span>(); <span class="kw">return</span> { el, w: r.width, h: r.height }; })
+    .<span class="fn">filter</span>(t =&gt; t.h &lt; min || t.w &lt; min);                <span class="cmt">// the failing list</span>
+}
+
+<span class="hl-line"><span class="cmt">// <span class="star">⭐</span> Key point ③: text spacing (WCAG 1.4.12) — inject the overrides and look for clipping</span></span>
+<span class="kw">function</span> <span class="fn">checkTextSpacing</span>(root) {
+  <span class="kw">const</span> s = document.<span class="fn">createElement</span>(<span class="str">'style'</span>);
+  s.textContent = <span class="str">'* { line-height: 1.5 !important; letter-spacing: 0.12em !important;'</span> +
+                  <span class="str">'    word-spacing: 0.16em !important; } p { margin-block-end: 2em !important; }'</span>;
+  document.head.<span class="fn">append</span>(s);
+  <span class="kw">const</span> clipped = Array.<span class="kw">from</span>(root.<span class="fn">querySelectorAll</span>(<span class="str">'*'</span>))
+    .<span class="fn">filter</span>(el =&gt; el.scrollHeight &gt; el.clientHeight + <span class="num">2</span> &amp;&amp; <span class="fn">getComputedStyle</span>(el).overflow !== <span class="str">'visible'</span>);
+  s.<span class="fn">remove</span>();
+  <span class="kw">return</span> clipped;
+}</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>这三个函数是"布局的可访问性单测"。把它们接进 CI（比如在 Playwright 里跑一遍），任何"顺手加了个固定高度"的提交都会立刻被发现。<b>坑</b>：<code>checkReflow</code> 里把宽度设成 320px 只对<b>局部容器</b>有意义；如果要测整个页面，应该用浏览器视口（<code>page.setViewportSize</code>），因为媒体查询会参与布局，而在一个 320px 的 div 里媒体查询并不会变。这是 6.2 演示里两种模式的区别（测试的是组件还是整页）。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>These three functions are unit tests for layout accessibility. Wiring them into CI (running them in Playwright, say) means a stray fixed height gets caught in the next commit. <b>Pitfall</b>: setting the width to 320px in <code>checkReflow</code> only makes sense for a <b>local container</b>; to test a whole page, resize the browser viewport (<code>page.setViewportSize</code>), because media queries participate in layout and they do not change inside a 320px div. That distinction — testing a component versus a page — is exactly what the two modes in the 6.2 demo contrast.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 一键施加四种可访问性压力（320px 重排 / 200% 字号 / 文本间距增强 / 高对比度），自动检测横向溢出、内容截断、点击目标过小与对比度不足，并给出 WCAG 条目号与修复建议。切换"组件测试 / 整页测试"模式看两者差别。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Apply four accessibility stresses in one click (320px reflow, 200% text, enhanced text spacing, high contrast) and get automatic detection of horizontal overflow, clipped content, undersized targets and low contrast — each labelled with its WCAG criterion and a suggested fix. Switch between component and whole-page test modes to see the difference.</p><div class="demo-mount" data-demo="d-6-2"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch-6-3">
+      <h2 data-lang="zh-CN">6.3 综合案例：CourseHub 从 v1 到 v2</h2>
+      <h2 data-lang="en-US" hidden>6.3 The full case: CourseHub from v1 to v2</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">把六章的诊断连起来看一遍：8 个病灶、8 个解法、一份可以直接拿去用的布局评审清单。</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>All six chapters in one pass: eight defects, eight fixes, and a layout review checklist you can take to work.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">这一节不引入新知识，只做一件事：<b>把前面的诊断串成一条完整的改造链</b>。下面的对照表就是 CourseHub 的项目交付说明，每一行都可以点开对应的章节复习。</p><p data-lang="en-US" hidden>This section introduces nothing new. It does one thing: <b>chains the earlier diagnoses into a single rebuild narrative</b>. The table below is the delivery note for the CourseHub project, and every row links back to its chapter.</p>
+<table class="mini" data-lang="zh-CN"><thead><tr><th>病灶</th><th>v1 的写法</th><th>v2 的解法</th><th>依据</th></tr></thead><tbody><tr><td>① 层次缺失</td><td>所有文字 16px</td><td>模数尺度 + CTA 块面/字重升级</td><td>第 1 章</td></tr><tr><td>② 间距无系统</td><td>21/13/37px 随手写</td><td>8pt 间距 token（24/32/64）</td><td>第 1 章</td></tr><tr><td>③ 绝对定位摆盒子</td><td>header 写死 120px</td><td>正常流 + <code>min-height</code> + flex 居中</td><td>第 2 章</td></tr><tr><td>④ 空格对齐导航</td><td><code>&amp;nbsp;</code> + 固定宽度</td><td>flex + <code>gap</code> + <code>margin-inline-start:auto</code></td><td>第 3 章</td></tr><tr><td>⑤ 卡片不齐 / 图片撑破</td><td><code>float</code> + 固定宽度</td><td>等高 flex 卡片 + <code>min-width:0</code> + <code>max-width:100%</code></td><td>第 3 章</td></tr><tr><td>⑥ padding 假装网格</td><td><code>padding-left: 5%</code></td><td>12 栏 Grid + <code>span</code> + 调试叠层</td><td>第 4 章</td></tr><tr><td>⑦ 只做桌面端</td><td>固定 1180px 容器</td><td>内容驱动断点 + 容器查询 + <code>clamp()</code></td><td>第 5 章</td></tr><tr><td>⑧ DOM 与视觉顺序不一致</td><td><code>order</code> 挪侧栏</td><td>DOM 按阅读顺序 + <code>grid-template-areas</code> 重排</td><td>第 6 章</td></tr></tbody></table><table class="mini" data-lang="en-US" hidden><thead><tr><th>Defect</th><th>What v1 did</th><th>What v2 does</th><th>Source</th></tr></thead><tbody><tr><td>① No hierarchy</td><td>Everything at 16px</td><td>Modular scale plus a solid, heavier CTA</td><td>Ch 1</td></tr><tr><td>② Arbitrary spacing</td><td>21/13/37px by hand</td><td>8pt spacing tokens (24/32/64)</td><td>Ch 1</td></tr><tr><td>③ Absolute positioning</td><td>Header fixed at 120px</td><td>Normal flow, <code>min-height</code>, flex centring</td><td>Ch 2</td></tr><tr><td>④ Space-hacked nav</td><td><code>&amp;nbsp;</code> plus fixed widths</td><td>flex, <code>gap</code>, <code>margin-inline-start:auto</code></td><td>Ch 3</td></tr><tr><td>⑤ Uneven cards, breaking images</td><td><code>float</code> plus fixed widths</td><td>Equal-height flex cards, <code>min-width:0</code>, <code>max-width:100%</code></td><td>Ch 3</td></tr><tr><td>⑥ Fake grid</td><td><code>padding-left: 5%</code></td><td>12-column grid, spans, debug overlay</td><td>Ch 4</td></tr><tr><td>⑦ Desktop only</td><td>Fixed 1180px container</td><td>Content-driven breakpoints, container queries, <code>clamp()</code></td><td>Ch 5</td></tr><tr><td>⑧ DOM ≠ visual order</td><td><code>order</code> moves the sidebar</td><td>DOM in reading order plus <code>grid-template-areas</code></td><td>Ch 6</td></tr></tbody></table>
+<h3 data-lang="zh-CN">布局评审清单（可以直接拿去用）</h3><h3 data-lang="en-US" hidden>Layout review checklist (ready to use)</h3>
+<ol data-lang="zh-CN"><li><b>层次</b>：眯眼看首屏，能不能在 3 秒内说出"第一重要的是什么"？</li><li><b>间距</b>：页面里是否存在不在间距尺度上的数字？组间距是否明显大于组内间距？</li><li><b>弹性</b>：把最长的一段文案换成两倍长度，版面还成立吗？</li><li><b>内容驱动</b>：是否存在写死的容器宽度或高度？把视口拖到 320px 有没有横向滚动条？</li><li><b>二维对齐</b>：同一区块内的元素是否共享对齐线？网格边界能不能被"看见"？</li><li><b>可访问性</b>：键盘 Tab 一遍，顺序是否与视觉顺序一致？放大到 200% 有没有内容丢失？点击目标是否 ≥ 24px？</li><li><b>可维护性</b>：删掉一个元素后，需要改几个地方？如果超过 2 处，说明有信息被重复描述了。</li></ol><ol data-lang="en-US" hidden><li><b>Hierarchy</b>: squint at the first screen — can you say what is most important within three seconds?</li><li><b>Spacing</b>: is there any value that is not on the spacing scale? Is between-group spacing clearly larger than within-group?</li><li><b>Flexibility</b>: double the longest piece of copy — does the layout still hold?</li><li><b>Content-driven</b>: are there fixed container widths or heights? Does 320px produce a horizontal scrollbar?</li><li><b>Two-dimensional alignment</b>: do elements in a section share alignment lines? Can you <b>see</b> the grid edges?</li><li><b>Accessibility</b>: tab through — does focus follow visual order? Does 200% zoom lose content? Are targets at least 24px?</li><li><b>Maintainability</b>: how many places must change when one element is removed? More than two means a fact is described twice.</li></ol>
+<p class="note" data-lang="zh-CN"><b>整套课程的一句话总结</b>：布局的本质是"把信息结构翻译成空间结构"。浏览器提供了两套翻译机制：<b>一维的流动（正常流、Flex）与二维的网格（Grid）</b>；而判断"翻译得好不好"的标准不是好看，而是<b>它在内容变化、屏幕变化、用户状态变化时，是否仍然成立</b>。</p><p class="note" data-lang="en-US" hidden><b>The whole course in one sentence</b>: layout is the translation of information structure into spatial structure. The browser offers two translation mechanisms — <b>one-dimensional flow (normal flow, flex) and two-dimensional grids (grid)</b> — and the test of a good translation is not beauty but <b>whether it still holds when the content changes, the screen changes, and the user’s condition changes</b>.</p>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 v1 → v2 的最终对比</span>演示里的 before/after 拖拽对比用的是<b>同一份 HTML</b>，只有 CSS 不同：文案、卡片数量、结构完全一致。这是本课程最重要的一个证据——<b>版面质量的差异可以完全来自布局决策，而不是内容或设计稿。</b>把分割线从最左拖到最右，可以看到 8 个病灶被逐个消除的过程。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 The final v1 → v2 comparison</span>The before/after slider in the demo uses <b>the same HTML</b>; only the CSS differs. The copy, the number of cards and the structure are identical. That is the most important piece of evidence in this course: <b>the entire difference in quality comes from layout decisions, not from content or from the design file.</b> Drag the divider from far left to far right and watch the eight defects disappear one by one.</div>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① v2 的布局样式表（骨架总览）</h3><h3 data-lang="en-US" hidden>Key code ① The v2 layout stylesheet (the whole skeleton)</h3>
+<p class="code-purpose" data-lang="zh-CN">六章的结论合起来其实很短：一套 token、一个 grid 骨架、几个原语。</p><p class="code-purpose" data-lang="en-US" hidden>Six chapters of conclusions compress into something short: one token set, one grid skeleton, a few primitives.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ①：设计 token（第 1 章） */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--space-1</span>: <span class="num">.5rem</span>; <span class="prop">--space-4</span>: <span class="num">1rem</span>; <span class="prop">--space-6</span>: <span class="num">2rem</span>; <span class="prop">--space-8</span>: <span class="num">4rem</span>;
+  <span class="prop">--step-1</span>: <span class="num">1.25rem</span>; <span class="prop">--step-3</span>: clamp(<span class="num">1.375rem</span>, <span class="num">1rem</span> + <span class="num">1.2vw</span>, <span class="num">2rem</span>);
+}
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ②：盒模型与地板（第 2 章） */</span></span>
+<span class="sel">*, *::before, *::after</span> { <span class="prop">box-sizing</span>: border-box; }
+<span class="sel">img, video</span> { <span class="prop">display</span>: block; <span class="prop">max-width</span>: <span class="num">100%</span>; <span class="prop">height</span>: auto; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ③：整页骨架用 Grid（第 4 章）+ DOM 按阅读顺序（第 6 章） */</span></span>
+<span class="sel">.layout</span> {
+  <span class="prop">display</span>: grid;
+  <span class="prop">grid-template-areas</span>: <span class="str">"header header"</span> <span class="str">"main side"</span> <span class="str">"footer footer"</span>;
+  <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>) <span class="num">15rem</span>;
+  <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+  <span class="prop">max-inline-size</span>: min(<span class="num">100%</span> - <span class="num">2rem</span>, <span class="num">72rem</span>);
+  <span class="prop">margin-inline</span>: auto;
+}
+<span class="sel">.layout &gt; .site-main</span> { <span class="prop">grid-area</span>: main; <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.layout &gt; .site-side</span> { <span class="prop">grid-area</span>: side; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ④：组件内部用 Flex（第 3 章）；自适应数量用 auto-fit（第 4 章）；原语（第 5 章） */</span></span>
+<span class="sel">.card-wall</span> { <span class="prop">display</span>: grid; <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+  <span class="prop">grid-template-columns</span>: repeat(auto-fit, minmax(min(<span class="num">100%</span>, <span class="num">17rem</span>), <span class="num">1fr</span>)); }
+<span class="sel">.card</span> { <span class="prop">display</span>: flex; <span class="prop">flex-direction</span>: column; <span class="prop">gap</span>: var(<span class="prop">--space-2</span>); <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.card__body</span> { <span class="prop">flex</span>: <span class="num">1</span>; }
+<span class="sel">.card__cta</span> { <span class="prop">margin-block-start</span>: auto; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ⑤：窄屏只需要改 areas（第 4 章） */</span></span>
+<span class="at">@media</span> (<span class="prop">max-width</span>: <span class="num">40rem</span>) {
+<span class="sel">  .layout</span> { <span class="prop">grid-template-areas</span>: <span class="str">"header"</span> <span class="str">"main"</span> <span class="str">"side"</span> <span class="str">"footer"</span>;
+            <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>); }
+}</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ①: design tokens (Ch 1) */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--space-1</span>: <span class="num">.5rem</span>; <span class="prop">--space-4</span>: <span class="num">1rem</span>; <span class="prop">--space-6</span>: <span class="num">2rem</span>; <span class="prop">--space-8</span>: <span class="num">4rem</span>;
+  <span class="prop">--step-1</span>: <span class="num">1.25rem</span>; <span class="prop">--step-3</span>: clamp(<span class="num">1.375rem</span>, <span class="num">1rem</span> + <span class="num">1.2vw</span>, <span class="num">2rem</span>);
+}
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ②: box model and the floor (Ch 2) */</span></span>
+<span class="sel">*, *::before, *::after</span> { <span class="prop">box-sizing</span>: border-box; }
+<span class="sel">img, video</span> { <span class="prop">display</span>: block; <span class="prop">max-width</span>: <span class="num">100%</span>; <span class="prop">height</span>: auto; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ③: page skeleton in grid (Ch 4), DOM in reading order (Ch 6) */</span></span>
+<span class="sel">.layout</span> {
+  <span class="prop">display</span>: grid;
+  <span class="prop">grid-template-areas</span>: <span class="str">"header header"</span> <span class="str">"main side"</span> <span class="str">"footer footer"</span>;
+  <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>) <span class="num">15rem</span>;
+  <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+  <span class="prop">max-inline-size</span>: min(<span class="num">100%</span> - <span class="num">2rem</span>, <span class="num">72rem</span>);
+  <span class="prop">margin-inline</span>: auto;
+}
+<span class="sel">.layout &gt; .site-main</span> { <span class="prop">grid-area</span>: main; <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.layout &gt; .site-side</span> { <span class="prop">grid-area</span>: side; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ④: flex inside components (Ch 3); auto-fit (Ch 4); primitives (Ch 5) */</span></span>
+<span class="sel">.card-wall</span> { <span class="prop">display</span>: grid; <span class="prop">gap</span>: var(<span class="prop">--space-6</span>);
+  <span class="prop">grid-template-columns</span>: repeat(auto-fit, minmax(min(<span class="num">100%</span>, <span class="num">17rem</span>), <span class="num">1fr</span>)); }
+<span class="sel">.card</span> { <span class="prop">display</span>: flex; <span class="prop">flex-direction</span>: column; <span class="prop">gap</span>: var(<span class="prop">--space-2</span>); <span class="prop">min-width</span>: <span class="num">0</span>; }
+<span class="sel">.card__body</span> { <span class="prop">flex</span>: <span class="num">1</span>; }
+<span class="sel">.card__cta</span> { <span class="prop">margin-block-start</span>: auto; }
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ⑤: narrow screens only need different areas (Ch 4) */</span></span>
+<span class="at">@media</span> (<span class="prop">max-width</span>: <span class="num">40rem</span>) {
+<span class="sel">  .layout</span> { <span class="prop">grid-template-areas</span>: <span class="str">"header"</span> <span class="str">"main"</span> <span class="str">"side"</span> <span class="str">"footer"</span>;
+            <span class="prop">grid-template-columns</span>: minmax(<span class="num">0</span>, <span class="num">1fr</span>); }
+}</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>整份骨架没有一个魔法数字、没有一处绝对定位、没有一条"靠 padding 凑"的对齐。<b>这就是这六章想要的终点</b>：布局代码几乎可以当作文档读——你能从 <code>grid-template-areas</code> 看出页面结构，从 <code>--space-*</code> 看出间距系统，从 <code>auto-fit</code> 看出它在任何宽度下都成立。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>There is not one magic number, no absolute positioning and no padding-based fake alignment in the whole skeleton. <b>This is the destination the six chapters aim at</b>: layout code that reads like documentation — you can see the page structure in <code>grid-template-areas</code>, the spacing system in <code>--space-*</code>, and the guarantee that it works at any width in <code>auto-fit</code>.</p>
+<h3 data-lang="zh-CN">关键代码 ② 布局评审清单的可执行版本</h3><h3 data-lang="en-US" hidden>Key code ② An executable version of the review checklist</h3>
+<p class="code-purpose" data-lang="zh-CN">把清单变成脚本，评审就不再依赖"记得检查"。</p><p class="code-purpose" data-lang="en-US" hidden>Turn the checklist into a script so review no longer depends on remembering to check.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">// <span class="star">⭐</span> 关键点 ①：一次性跑完"布局评审清单"的自动化部分</span></span>
+<span class="kw">export</span> <span class="kw">function</span> <span class="fn">reviewLayout</span>(page) {
+  <span class="kw">return</span> page.<span class="fn">evaluate</span>(() =&gt; {
+    <span class="kw">const</span> issues = [];
+    <span class="kw">const</span> seen = <span class="kw">new</span> <span class="fn">Set</span>();
+
+    <span class="cmt">// (1) 横向溢出（WCAG 1.4.10）</span>
+    <span class="kw">const</span> doc = document.scrollingElement;
+    <span class="kw">if</span> (doc.scrollWidth - doc.clientWidth &gt; <span class="num">1</span>) issues.<span class="fn">push</span>(<span class="str">'reflow: 横向溢出 '</span> + (doc.scrollWidth - doc.clientWidth) + <span class="str">'px'</span>);
+
+    <span class="cmt">// (2) 点击目标（WCAG 2.5.8）</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'a, button, input, select'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">if</span> (!el.offsetParent) <span class="kw">return</span>;
+      <span class="kw">const</span> r = el.<span class="fn">getBoundingClientRect</span>();
+      <span class="kw">if</span> (r.height &lt; <span class="num">24</span> || r.width &lt; <span class="num">24</span>) issues.<span class="fn">push</span>(<span class="str">'target: '</span> + (el.textContent || el.tagName).<span class="fn">trim</span>().<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">18</span>) + <span class="str">' '</span> + Math.<span class="fn">round</span>(r.width) + <span class="str">'×'</span> + Math.<span class="fn">round</span>(r.height));
+    });
+
+    <span class="cmt">// (3) 绝对定位的布局元素（第 2 章：只该用于装饰）</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'header, nav, main, aside, section, article'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">if</span> (<span class="fn">getComputedStyle</span>(el).position === <span class="str">'absolute'</span>) issues.<span class="fn">push</span>(<span class="str">'absolute: '</span> + el.tagName.<span class="fn">toLowerCase</span>() + <span class="str">' 用绝对定位参与布局'</span>);
+    });
+
+    <span class="cmt">// (4) 不在 8pt 尺度上的间距（第 1 章）</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'*'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">const</span> cs = <span class="fn">getComputedStyle</span>(el);
+      [<span class="str">'rowGap'</span>, <span class="str">'columnGap'</span>].<span class="fn">forEach</span>((p) =&gt; {
+        <span class="kw">const</span> v = <span class="fn">parseFloat</span>(cs[p]);
+        <span class="kw">if</span> (v &gt; <span class="num">0</span> &amp;&amp; v % <span class="num">4</span> !== <span class="num">0</span> &amp;&amp; !seen.<span class="fn">has</span>(el)) { seen.<span class="fn">add</span>(el); issues.<span class="fn">push</span>(<span class="str">'spacing: gap '</span> + v + <span class="str">'px 不在 4pt 尺度上'</span>); }
+      });
+    });
+    <span class="kw">return</span> issues;
+  });
+}</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">// <span class="star">⭐</span> Key point ①: run the automatable part of the layout review checklist in one go</span></span>
+<span class="kw">export</span> <span class="kw">function</span> <span class="fn">reviewLayout</span>(page) {
+  <span class="kw">return</span> page.<span class="fn">evaluate</span>(() =&gt; {
+    <span class="kw">const</span> issues = [];
+    <span class="kw">const</span> seen = <span class="kw">new</span> <span class="fn">Set</span>();
+
+    <span class="cmt">// (1) horizontal overflow (WCAG 1.4.10)</span>
+    <span class="kw">const</span> doc = document.scrollingElement;
+    <span class="kw">if</span> (doc.scrollWidth - doc.clientWidth &gt; <span class="num">1</span>) issues.<span class="fn">push</span>(<span class="str">'reflow: horizontal overflow '</span> + (doc.scrollWidth - doc.clientWidth) + <span class="str">'px'</span>);
+
+    <span class="cmt">// (2) target size (WCAG 2.5.8)</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'a, button, input, select'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">if</span> (!el.offsetParent) <span class="kw">return</span>;
+      <span class="kw">const</span> r = el.<span class="fn">getBoundingClientRect</span>();
+      <span class="kw">if</span> (r.height &lt; <span class="num">24</span> || r.width &lt; <span class="num">24</span>) issues.<span class="fn">push</span>(<span class="str">'target: '</span> + (el.textContent || el.tagName).<span class="fn">trim</span>().<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">18</span>) + <span class="str">' '</span> + Math.<span class="fn">round</span>(r.width) + <span class="str">'x'</span> + Math.<span class="fn">round</span>(r.height));
+    });
+
+    <span class="cmt">// (3) absolutely positioned layout elements (Ch 2: decoration only)</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'header, nav, main, aside, section, article'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">if</span> (<span class="fn">getComputedStyle</span>(el).position === <span class="str">'absolute'</span>) issues.<span class="fn">push</span>(<span class="str">'absolute: '</span> + el.tagName.<span class="fn">toLowerCase</span>() + <span class="str">' is positioned absolutely in layout'</span>);
+    });
+
+    <span class="cmt">// (4) spacing off the 8pt scale (Ch 1)</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'*'</span>).<span class="fn">forEach</span>((el) =&gt; {
+      <span class="kw">const</span> cs = <span class="fn">getComputedStyle</span>(el);
+      [<span class="str">'rowGap'</span>, <span class="str">'columnGap'</span>].<span class="fn">forEach</span>((p) =&gt; {
+        <span class="kw">const</span> v = <span class="fn">parseFloat</span>(cs[p]);
+        <span class="kw">if</span> (v &gt; <span class="num">0</span> &amp;&amp; v % <span class="num">4</span> !== <span class="num">0</span> &amp;&amp; !seen.<span class="fn">has</span>(el)) { seen.<span class="fn">add</span>(el); issues.<span class="fn">push</span>(<span class="str">'spacing: gap '</span> + v + <span class="str">'px is off the 4pt scale'</span>); }
+      });
+    });
+    <span class="kw">return</span> issues;
+  });
+}</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>这个脚本是 6.3 演示里"自检清单"的后端逻辑，也是可以放进 CI 的最小可用版本（配合 Playwright 的 <code>page.evaluate</code>）。<b>注意它不是完整审计</b>：层次、可读性、语义正确性无法自动判断。<b>自动化检查负责"守住底线"，人工评审负责"判断上限"</b>——把两者混为一谈是常见的误区。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>This script is the logic behind the self-check panel in the 6.3 demo and doubles as a minimal CI version (using Playwright’s <code>page.evaluate</code>). <b>It is not a full audit</b>: hierarchy, readability and semantic correctness cannot be automated. <b>Automated checks hold the floor; human review judges the ceiling</b> — conflating the two is a common mistake.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 拖拽分割线对比 CourseHub v1 / v2（同一份 HTML，只有 CSS 不同）；点击 8 个病灶可跳到对应章节；下方是可交互的布局评审清单，勾选后实时给出分数与"还差哪几项"的提示。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Drag the divider to compare CourseHub v1 and v2 (same HTML, different CSS). Click any of the eight defects to jump to its chapter. Below is an interactive review checklist that scores as you tick, telling you what is still missing.</p><div class="demo-mount" data-demo="d-6-3"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer class="lesson-footer">
+  <p data-i18n="footer.copy"></p>
+</footer>
+
+<nav class="chapter-pager" aria-label="chapter pager">
+  <a class="pager-prev" href="../lesson-05/"><span class="pager-dir" data-i18n="common.prev"></span><span class="pager-title" data-lang="zh-CN">第 5 章 响应式与内在布局</span><span class="pager-title" data-lang="en-US" hidden>Chapter 5 Responsive and intrinsic layout</span></a>
+  <a class="pager-portal" href="../" data-i18n="common.portal"></a>
+  <span class="pager-next empty"></span>
+</nav>
+
+<script type="module" src="../assets/lesson.js"></script>
+<script type="module" src="../assets/lang.js"></script>
+</body>
+</html>

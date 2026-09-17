@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="《页面布局之道》—— 中英双语交互教学网站：讲解 / 关键代码 / 动态演示三合一的页面布局课程" />
+<title>第 1 章 布局是信息设计 · Layout Is Information Design · 《页面布局之道》</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../assets/styles.css" />
+<link rel="stylesheet" href="../assets/lesson.css" />
+</head>
+<body class="lesson" data-chapter="1">
+<nav class="course-topbar">
+  <a class="brand" href="../"><span class="back">←</span><span data-i18n="nav.home"></span></a>
+  <ul class="tabs">
+    <li data-lang="zh-CN"><a href="../lesson-01/" class="current">第 1 章 · 布局是信息设计</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-01/">Ch 1 · Layout Is Information Design</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-02/">第 2 章 · 文档流与盒模型</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-02/">Ch 2 · Flow & Box Model</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-03/">第 3 章 · 一维布局 Flexbox</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-03/">Ch 3 · Flexbox (1D)</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-04/">第 4 章 · 二维布局 Grid</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-04/">Ch 4 · Grid (2D)</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-05/">第 5 章 · 响应式与内在布局</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-05/">Ch 5 · Responsive & Intrinsic</a></li>
+    <li data-lang="zh-CN"><a href="../lesson-06/">第 6 章 · 可访问性与综合案例</a></li>
+    <li data-lang="en-US" hidden><a href="../lesson-06/">Ch 6 · Accessibility & Case Study</a></li>
+  </ul>
+  <div class="lang-switch " role="group" data-i18n-aria="nav.lang.label"></div>
+</nav>
+
+<header class="lesson-header">
+  <div>
+    <h1 data-lang="zh-CN">第 1 章 布局是信息设计</h1>
+    <h1 data-lang="en-US" hidden>Chapter 1 Layout Is Information Design</h1>
+    <p class="subtitle" data-lang="zh-CN">布局不是把盒子摆好看，而是用空间、尺寸和顺序，替读者把信息排好优先级。这一章先建立判断标准，再动手。</p>
+    <p class="subtitle" data-lang="en-US" hidden>Layout is not about arranging boxes prettily; it is about using space, size and order to set priorities for the reader. This chapter builds the criteria before we touch any CSS.</p>
+  </div>
+  <div class="header-tip">
+    <span data-lang="zh-CN" data-i18n="tip.sections"></span>
+    <span data-lang="en-US" hidden data-i18n="tip.sections"></span>
+    <br /><span class="kbd">[</span> <span class="kbd">]</span> <span data-lang="zh-CN">切换小节</span><span data-lang="en-US" hidden>sections</span>
+    · <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span> <span data-lang="zh-CN">切换讲解/代码/演示</span><span data-lang="en-US" hidden>explain/code/demo</span>
+  </div>
+</header>
+
+<div class="case-banner">
+  <span>🧩</span>
+  <span data-lang="zh-CN">本章诊断案例的 <b>① 层次缺失</b> 与 <b>② 间距无系统</b>：CourseHub v1 里所有文字都是 16px，间距值是 21/13/37px（都不在 8pt 刻度上），报名按钮"消失"在正文里。</span>
+  <span data-lang="en-US" hidden>This chapter diagnoses defects <b>① no hierarchy</b> and <b>② arbitrary spacing</b>: in CourseHub v1 every piece of text is 16px and spacings are 13/21/37px, so the Enroll button vanishes into the body copy.</span>
+</div>
+
+<main class="lesson-main">
+  <aside class="chapter-nav">
+    <h3 data-i18n="nav.toc"></h3>
+    <ul>
+      <li><a href="#ch-1-1" data-chapter="ch-1-1"><span class="n">1.1</span><span data-lang="zh-CN">布局决定「能不能被读懂」</span><span data-lang="en-US" hidden>Layout decides whether the page can be read</span></a></li>
+      <li><a href="#ch-1-2" data-chapter="ch-1-2"><span class="n">1.2</span><span data-lang="zh-CN">视觉层次的四个杠杆</span><span data-lang="en-US" hidden>The four levers of visual hierarchy</span></a></li>
+      <li><a href="#ch-1-3" data-chapter="ch-1-3"><span class="n">1.3</span><span data-lang="zh-CN">用系统而不是手感：8pt 网格与纵向节奏</span><span data-lang="en-US" hidden>Systems, not vibes: the 8pt grid and vertical rhythm</span></a></li>
+    </ul>
+    <div class="nav-tip">
+      <a href="../supplementary/" data-i18n="common.demo-index"></a>
+      <a href="../" data-i18n="common.portal"></a>
+    </div>
+  </aside>
+
+  <section class="chapter-content">
+
+    <article class="chapter" id="ch-1-1">
+      <h2 data-lang="zh-CN">1.1 布局决定「能不能被读懂」</h2>
+      <h2 data-lang="en-US" hidden>1.1 Layout decides whether the page can be read</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">人眼不会逐字阅读，而是先抓「块」和「差异」。布局的第一职责，是让眼睛知道先看什么。</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>The eye does not read character by character; it grabs chunks and differences first. The first job of layout is to tell the eye what to look at first.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">先做一个观察实验：把 CourseHub 首页截图高斯模糊到看不清文字，你还能分辨出「这是导航、这是标题、这是正文、这里可以点击」吗？<b>如果不能，说明布局的信息职责没有完成</b>——读者之所以能找到内容，靠的是你在页面上制造出来的<b>差异</b>，而不是文字本身。</p><p data-lang="en-US" hidden>Try a quick experiment: blur a screenshot of the CourseHub landing page until the text is illegible. Can you still tell what is navigation, what is a heading, what is body copy, and where you can click? <b>If not, the layout has failed its informational job</b> — readers find things because of the <b>differences</b> you create on the page, not because of the words themselves.</p>
+<h3 data-lang="zh-CN">一、人眼先看到「分组」，而不是「元素」</h3><h3 data-lang="en-US" hidden>1. The eye sees groups before it sees elements</h3>
+<p data-lang="zh-CN">1912 年起，格式塔心理学家提出一组知觉组织原则，解释了人脑如何把零散视觉信号自动组织成结构。做布局时最常用的四条：</p><p data-lang="en-US" hidden>From 1912 on, Gestalt psychologists described how the brain automatically organises scattered visual signals into structure. Four of their principles matter most for layout:</p>
+<table class="mini" data-lang="zh-CN"><thead><tr><th>原则</th><th>含义</th><th>布局里的用法</th></tr></thead><tbody><tr><td><b>接近性</b> Proximity</td><td>距离近的元素被看作一组</td><td>用间距表达归属：卡片内 8–12px，卡片间 24–32px，组间距必须大于组内间距</td></tr><tr><td><b>相似性</b> Similarity</td><td>外观相似的元素被看作同类</td><td>同类元素共享一套字号/颜色/圆角，靠 token 而不是靠手写</td></tr><tr><td><b>共同区域</b> Common region</td><td>同一容器内的元素被看作一组</td><td>卡片、区块背景、分隔线，是比间距更强的分组信号</td></tr><tr><td><b>连续性与闭合</b> Continuity / Closure</td><td>对齐的边线会被眼睛自动连成一条线</td><td>左对齐一条竖线，能让整页"看起来整齐"，即使元素内容各异</td></tr></tbody></table><table class="mini" data-lang="en-US" hidden><thead><tr><th>Principle</th><th>Meaning</th><th>Use in layout</th></tr></thead><tbody><tr><td><b>Proximity</b></td><td>Elements that are close are read as one group</td><td>Encode grouping with spacing: 8–12px inside a card, 24–32px between cards. Between-group spacing must exceed within-group spacing</td></tr><tr><td><b>Similarity</b></td><td>Elements that look alike are read as the same kind</td><td>Same-kind elements share one type scale, colour and radius — via tokens, not by hand</td></tr><tr><td><b>Common region</b></td><td>Elements inside one container are read as a group</td><td>Cards, section backgrounds and dividers group more strongly than spacing alone</td></tr><tr><td><b>Continuity / Closure</b></td><td>The eye connects aligned edges into an implied line</td><td>One shared left edge makes a whole page look tidy even when the content differs</td></tr></tbody></table>
+<div class="theory-card" data-lang="zh-CN"><strong>🧠 理论支点：</strong>布局的本质是<b>在视觉上编码数据结构</b>。接近性编码"归属"，相似性编码"类别"，共同区域编码"模块边界"。当你的间距忽大忽小、同类元素样式不一，你等于在向读者传递错误的语法信息——读者会累，这就是"看着别扭"的神经学来源。<cite>Wertheimer 1923《Untersuchungen zur Lehre von der Gestalt》；Arnell & Larson 2009 关于接近性影响注意的研究</cite></div><div class="theory-card" data-lang="en-US" hidden><strong>🧠 Theory: </strong>Layout is essentially <b>encoding data structure visually</b>: proximity encodes membership, similarity encodes category, common region encodes module boundaries. When your spacings vary randomly or same-kind elements differ, you are broadcasting wrong syntax — and the reader gets tired. That is the neurological source of "it just feels off".<cite>Wertheimer 1923, "Untersuchungen zur Lehre von der Gestalt"; Arnell & Larson 2009 on proximity effects on attention</cite></div>
+<h3 data-lang="zh-CN">二、视觉层次：制造"阅读顺序"</h3><h3 data-lang="en-US" hidden>2. Visual hierarchy: manufacturing a reading order</h3>
+<p data-lang="zh-CN">视觉层次（visual hierarchy）指的是：在不改变文案的前提下，让读者按<b>你希望的顺序</b>接收信息。它靠三个变量制造差异——<b>尺寸</b>（谁更大）、<b>对比</b>（谁更重/更亮）、<b>空间</b>（谁被孤立出来）。1.2 节会把三者变成可调的滑杆。</p><p data-lang="en-US" hidden>Visual hierarchy means getting the reader to receive information <b>in the order you intend</b>, without changing a word of copy. It is created by three variables: <b>size</b> (what is bigger), <b>contrast</b> (what is heavier or brighter) and <b>space</b> (what is isolated). Section 1.2 turns these into sliders you can drag.</p>
+<p data-lang="zh-CN">关于"顺序"，有两个被广泛引用的观察：<b>F 型</b>阅读模式（以文字为主的页面，视线先横扫顶部、再横扫中部、最后竖向扫左侧）和 <b>Z 型</b>阅读模式（视觉型落地页，视线走左上 → 右上 → 左下 → 右下）。它们不是铁律，但给出了一个实用推论：<b>页面左上是最贵的空间，右下是最适合放行动按钮的位置</b>。</p><p data-lang="en-US" hidden>Two widely cited observations about order: the <b>F pattern</b> (text-heavy pages: scan the top, scan a second line, then scan down the left edge) and the <b>Z pattern</b> (visual landing pages: top-left → top-right → bottom-left → bottom-right). They are not laws, but they yield a useful corollary: <b>the top-left is the most expensive real estate, and the bottom-right is the natural home for the action button</b>.</p>
+<p class="note" data-lang="zh-CN"><b>课堂要点</b>：信息层次的检查方法只有一句话——<b>眯眼看</b>（或者把页面缩小到 25%）。如果眯眼之后看不出「哪个是第一、哪个是第二」，说明层次没做出来，而不是用户不够专注。</p><p class="note" data-lang="en-US" hidden><b>Classroom takeaway</b>: there is a one-sentence test for hierarchy — <b>squint</b> (or zoom the page out to 25%). If you cannot tell "what is first and what is second" while squinting, the hierarchy is missing; the user is not the problem.</p>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 案例诊断：问题 ① 层次缺失</span>CourseHub v1 的 HTML 是"正确的"：有 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;button&gt;</code>，语义没问题。但 CSS 里写了一条 <code>body { font-size: 16px; }</code> 之后，浏览器默认的标题尺寸被重置了，所有文字都是 16px。结果：用户读完三屏才意识到"往下有个报名按钮"。<b>语义正确 ≠ 视觉可读</b>，这是初学者最常见的一类"看不出错在哪"的问题。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 Case diagnosis: defect ① no hierarchy</span>The v1 markup is "correct": it has <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code> and <code>&lt;button&gt;</code> with proper semantics. But one line of CSS — <code>body { font-size: 16px; }</code> — resets the browser’s default heading sizes, so everything renders at 16px. Users had to read three screens before realising an Enroll button existed. <b>Semantically correct ≠ visually readable</b>, and this is the classic beginner bug that "looks like nothing is wrong".</div>
+<pre data-lang="zh-CN"><code><span class="cmt">/* 病态：所有元素同尺寸，没有差异可言 */</span>
+<span class="sel">body</span> { <span class="prop">font-size</span>: <span class="num">16px</span>; }
+<span class="sel">h1, h2, h3, p, button</span> { <span class="prop">font-size</span>: <span class="num">1em</span>; }</code></pre><pre data-lang="en-US" hidden><code><span class="cmt">/* The defect: every element is the same size, so there is no difference */</span>
+<span class="sel">body</span> { <span class="prop">font-size</span>: <span class="num">16px</span>; }
+<span class="sel">h1, h2, h3, p, button</span> { <span class="prop">font-size</span>: <span class="num">1em</span>; }</code></pre>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① 用一条横向尺度重建层次</h3><h3 data-lang="en-US" hidden>Key code ① Rebuild hierarchy with one type scale</h3>
+<p class="code-purpose" data-lang="zh-CN">层次来自"比例"，不是来自"绝对值"。先把尺度定义成变量，页面里只允许从尺度里取值。</p><p class="code-purpose" data-lang="en-US" hidden>Hierarchy comes from ratios, not absolute values. Define the scale as variables first, then only ever pick values from that scale.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ①：模数尺度 = 一个基准 × 逐级倍率，层次才有"家族感" */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--step-0</span>: <span class="num">1rem</span>;                              <span class="cmt">/* 正文基准 16px */</span>
+  <span class="prop">--ratio</span>: <span class="num">1.25</span>;                               <span class="cmt">/* 倍率：小屏用 1.2，大屏可到 1.5 */</span>
+  <span class="prop">--step-1</span>: calc(var(<span class="prop">--step-0</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 20px  卡片标题 */</span>
+  <span class="prop">--step-2</span>: calc(var(<span class="prop">--step-1</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 25px  小节标题 */</span>
+  <span class="prop">--step-3</span>: calc(var(<span class="prop">--step-2</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 31px  H2 */</span>
+  <span class="prop">--step-4</span>: calc(var(<span class="prop">--step-3</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 39px  H1 */</span>
+  <span class="prop">--step--1</span>: calc(var(<span class="prop">--step-0</span>) / var(<span class="prop">--ratio</span>));      <span class="cmt">/* 12.8px 辅助文字 */</span>
+}
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ②：只给"需要被区分"的元素分配级别，其余继承 */</span></span>
+<span class="sel">h1</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-4</span>); <span class="prop">line-height</span>: <span class="num">1.1</span>; }
+<span class="sel">h2</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-3</span>); <span class="prop">line-height</span>: <span class="num">1.2</span>; }
+<span class="sel">.card h3</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-1</span>); <span class="prop">line-height</span>: <span class="num">1.3</span>; }
+<span class="sel">small, .meta</span> { <span class="prop">font-size</span>: var(<span class="prop">--step--1</span>); }</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ①: a modular scale = one base × one ratio, so levels look related */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--step-0</span>: <span class="num">1rem</span>;                              <span class="cmt">/* body base 16px */</span>
+  <span class="prop">--ratio</span>: <span class="num">1.25</span>;                               <span class="cmt">/* ratio: 1.2 on small screens, up to 1.5 on large */</span>
+  <span class="prop">--step-1</span>: calc(var(<span class="prop">--step-0</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 20px  card title */</span>
+  <span class="prop">--step-2</span>: calc(var(<span class="prop">--step-1</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 25px  section title */</span>
+  <span class="prop">--step-3</span>: calc(var(<span class="prop">--step-2</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 31px  H2 */</span>
+  <span class="prop">--step-4</span>: calc(var(<span class="prop">--step-3</span>) * var(<span class="prop">--ratio</span>));       <span class="cmt">/* 39px  H1 */</span>
+  <span class="prop">--step--1</span>: calc(var(<span class="prop">--step-0</span>) / var(<span class="prop">--ratio</span>));      <span class="cmt">/* 12.8px helper text */</span>
+}
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ②: only assign levels to what must be distinguished; everything else inherits */</span></span>
+<span class="sel">h1</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-4</span>); <span class="prop">line-height</span>: <span class="num">1.1</span>; }
+<span class="sel">h2</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-3</span>); <span class="prop">line-height</span>: <span class="num">1.2</span>; }
+<span class="sel">.card h3</span> { <span class="prop">font-size</span>: var(<span class="prop">--step-1</span>); <span class="prop">line-height</span>: <span class="num">1.3</span>; }
+<span class="sel">small, .meta</span> { <span class="prop">font-size</span>: var(<span class="prop">--step--1</span>); }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>为什么是"乘一个倍率"而不是"每个级别单独拍脑袋定尺寸"？因为人眼判断层次靠的是<b>相邻级别的比值</b>。等比数列让每次跳跃的"视觉力度"一致，页面读起来像一首有节拍的曲子；如果 39 / 25 / 16 这种比例忽大忽小，读者会觉得"有的标题太夸张，有的又不够"。<b>坑</b>：倍率不要低于 1.1，否则两级标题看起来几乎一样；也不要超过 1.6，否则大标题会吃掉整个首屏。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>Why multiply by one ratio instead of hand-picking each size? Because the eye judges hierarchy by the <b>ratio between adjacent levels</b>. A geometric progression gives every jump an equal visual force, so the page reads with a beat. When ratios swing (39 / 25 / 16 …), readers feel that "some headings shout and others murmur". <b>Pitfall</b>: keep the ratio above 1.1, or two levels look identical; keep it below 1.6, or the largest heading eats the whole first screen.</p>
+<h3 data-lang="zh-CN">关键代码 ② 一行布局把按钮"推"出来</h3><h3 data-lang="en-US" hidden>Key code ② One layout line that pushes the button forward</h3>
+<p class="code-purpose" data-lang="zh-CN">层次不只靠字号，还靠空间。把行动按钮从正文流中"孤立"出来，是成本最低的层次手段。</p><p class="code-purpose" data-lang="en-US" hidden>Hierarchy is not only type size; it is also space. Isolating the call to action from the text flow is the cheapest hierarchy tool there is.</p>
+<pre data-lang="zh-CN"><code><span class="sel">.hero</span> {
+<span class="hl-line">  <span class="cmt">/* <span class="star">⭐</span> 关键点 ③：用"组间间距 &gt; 组内间距"实现分层，读者会自动分块 */</span></span>
+  <span class="prop">display</span>: flex;               <span class="cmt">/* 主轴方向堆叠 */</span>
+  <span class="prop">flex-direction</span>: column;
+  <span class="prop">gap</span>: var(<span class="prop">--space-2</span>);         <span class="cmt">/* 组内 8px：标题与副标题属于同一块 */</span>
+  <span class="prop">padding-block-end</span>: var(<span class="prop">--space-6</span>);   <span class="cmt">/* 组间 32px：与下面的按钮明确分开 */</span>
+}
+<span class="sel">.hero .cta</span> {
+<span class="hl-line">  <span class="prop">margin-block-start</span>: var(<span class="prop">--space-4</span>);  <span class="cmt">/* <span class="star">⭐</span> 关键点 ④：给按钮额外的上方留白 = 视觉升权 */</span></span>
+  <span class="prop">align-self</span>: flex-start;              <span class="cmt">/* 按钮不要被拉满整行，宽度即"重要性声明" */</span>
+  <span class="prop">font-size</span>: var(<span class="prop">--step-0</span>);
+  <span class="prop">padding</span>: var(<span class="prop">--space-3</span>) var(<span class="prop">--space-5</span>);
+}</code></pre><pre data-lang="en-US" hidden><code><span class="sel">.hero</span> {
+<span class="hl-line">  <span class="cmt">/* <span class="star">⭐</span> Key point ③: group separation = "between-group spacing &gt; within-group spacing" */</span></span>
+  <span class="prop">display</span>: flex;               <span class="cmt">/* stack along the main axis */</span>
+  <span class="prop">flex-direction</span>: column;
+  <span class="prop">gap</span>: var(<span class="prop">--space-2</span>);         <span class="cmt">/* within group: 8px — title and subtitle belong together */</span>
+  <span class="prop">padding-block-end</span>: var(<span class="prop">--space-6</span>);   <span class="cmt">/* between groups: 32px — clearly separated from what follows */</span>
+}
+<span class="sel">.hero .cta</span> {
+<span class="hl-line">  <span class="prop">margin-block-start</span>: var(<span class="prop">--space-4</span>);  <span class="cmt">/* <span class="star">⭐</span> Key point ④: extra space above = visual promotion */</span></span>
+  <span class="prop">align-self</span>: flex-start;              <span class="cmt">/* do not stretch full width; width itself signals importance */</span>
+  <span class="prop">font-size</span>: var(<span class="prop">--step-0</span>);
+  <span class="prop">padding</span>: var(<span class="prop">--space-3</span>) var(<span class="prop">--space-5</span>);
+}</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong><code>gap</code> 与 <code>margin</code> 在这里分工不同：<code>gap</code> 表达<b>组内</b>关系（属于一起的，间距小且均匀），<code>margin</code> 表达<b>组间</b>关系（需要被分开的，间距大）。这就是把格式塔的接近性翻译成 CSS 的方式。另外注意用的是逻辑属性 <code>padding-block-end</code> / <code>margin-block-start</code>：它们会随书写方向自动映射到上下/左右，对多语言（含从右到左语言）更友好。<b>坑</b>：如果这里用 <code>margin-bottom</code> 叠 <code>margin-top</code>，会诱发外边距折叠（见 2.2），间距值不再是你要的那个数。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong><code>gap</code> and <code>margin</code> do different jobs here: <code>gap</code> expresses <b>within-group</b> relations (small, uniform), <code>margin</code> expresses <b>between-group</b> relations (large). That is Gestalt proximity translated into CSS. Note the logical properties <code>padding-block-end</code> / <code>margin-block-start</code>: they map to top/bottom or left/right automatically according to writing mode, which is friendlier for multilingual pages (including right-to-left). <b>Pitfall</b>: mixing <code>margin-bottom</code> and <code>margin-top</code> invites margin collapsing (see 2.2), and the resulting spacing is no longer the number you wrote.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 拖动分割线对比 v1 / v2；点击页面上的 ① ② 病灶标记查看诊断；也可以单独开关"层次修复"与"间距修复"，看层次评分如何变化。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Drag the divider to compare v1 / v2. Click the ① ② markers on the page to read each diagnosis, or toggle the hierarchy and spacing fixes separately and watch the score change.</p><div class="demo-mount" data-demo="d-1-1"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch-1-2">
+      <h2 data-lang="zh-CN">1.2 视觉层次的四个杠杆</h2>
+      <h2 data-lang="en-US" hidden>1.2 The four levers of visual hierarchy</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">尺寸、间距、对比、对齐：把"设计感"拆成四个可以分别调节、并且可以量化的旋钮。</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>Size, space, contrast, alignment: splitting "design sense" into four knobs you can tune separately — and measure.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">设计师常被要求"做得好看一点"，但"好看"没法执行。把这句话翻译成可执行的四条，来自 Robin Williams 总结的 <b>CRAP</b> 原则：<b>C</b>ontrast（对比）、<b>R</b>epetition（重复）、<b>A</b>lignment（对齐）、<b>P</b>roximity（接近）。其中对比、对齐、接近直接由布局承担；重复则由设计 token 承担。</p><p data-lang="en-US" hidden>Designers are often told to "make it prettier", which is not actionable. Robin Williams’ <b>CRAP</b> principles translate that request into four executable rules: <b>C</b>ontrast, <b>R</b>epetition, <b>A</b>lignment, <b>P</b>roximity. Contrast, alignment and proximity are the layout’s job; repetition is the job of design tokens.</p>
+<h3 data-lang="zh-CN">杠杆一：尺寸（Size）</h3><h3 data-lang="en-US" hidden>Lever 1: size</h3>
+<p data-lang="zh-CN">尺寸是<b>最强</b>的层次信号——在低分辨率、模糊、远距离、色盲等不利条件下，大小差异仍然可辨。因此页面最重要的东西应该最大。反过来说，如果一个次要元素做得和主元素一样大，读者就必须靠阅读内容才能判断主次，成本立刻上升。</p><p data-lang="en-US" hidden>Size is the <b>strongest</b> hierarchy signal: it survives blur, distance, low resolution and colour-blindness. So the most important thing on the page should be the biggest. Conversely, if a secondary element is as big as the primary one, the reader must read the content to work out the priority — an immediate cost.</p>
+<h3 data-lang="zh-CN">杠杆二：间距（Space）</h3><h3 data-lang="en-US" hidden>Lever 2: space</h3>
+<p data-lang="zh-CN">间距是最容易被忽略、却最影响"高级感"的杠杆。它有三个作用：<b>分组</b>（接近性）、<b>呼吸</b>（降低认知负荷）、<b>强调</b>（被空白包围的元素自动升权）。注意最后一条：留白不是"没用的空间"，而是<b>主动的强调手段</b>。给按钮上方加 32px 留白，比给它加粗更有效。</p><p data-lang="en-US" hidden>Space is the most overlooked lever and the one that most affects the feeling of quality. It does three things: <b>grouping</b> (proximity), <b>breathing</b> (lower cognitive load) and <b>emphasis</b> (whatever is surrounded by whitespace gains rank). Note the last one: whitespace is not wasted space, it is an <b>active emphasis tool</b>. Adding 32px above a button works better than making it bold.</p>
+<h3 data-lang="zh-CN">杠杆三：对比（Contrast）</h3><h3 data-lang="en-US" hidden>Lever 3: contrast</h3>
+<p data-lang="zh-CN">对比包括字重、颜色明度、底色块、边框。它比尺寸更"细腻"，适合区分<b>同一级别内</b>的差异（比如正文 vs 辅助说明）。但对比有个硬约束：<b>可访问性</b>。正文文字与其背景的对比度至少要 4.5:1（WCAG 1.4.3 AA），大字号至少 3:1。这一条会在 6.2 节用工具量化检查。</p><p data-lang="en-US" hidden>Contrast covers weight, lightness, background blocks and borders. It is subtler than size and is best for distinguishing items <b>within one level</b> (body text vs helper text). But contrast has a hard constraint: <b>accessibility</b>. Body text needs at least 4.5:1 against its background (WCAG 1.4.3 AA) and large text at least 3:1. Section 6.2 measures this with a tool.</p>
+<h3 data-lang="zh-CN">杠杆四：对齐（Alignment）</h3><h3 data-lang="en-US" hidden>Lever 4: alignment</h3>
+<p data-lang="zh-CN">对齐几乎不"抢眼"，但它决定了页面是否显得专业。原理是格式塔的<b>连续性</b>：当多个元素共享一条边线，眼睛会把它们连成一条隐含的线，产生秩序感。这就是为什么一个界面里应该只有<b>少数几条对齐线</b>（左对齐线、网格线），而且每条线都要有理由。</p><p data-lang="en-US" hidden>Alignment rarely draws attention, yet it decides whether a page looks professional. The mechanism is Gestalt <b>continuity</b>: when several elements share an edge, the eye connects them into an implied line, producing order. That is why an interface should have only a <b>few alignment lines</b> (a left edge, a grid), each with a reason to exist.</p>
+<p class="note" data-lang="zh-CN"><b>四个杠杆的优先级</b>：尺寸 > 间距 > 对比 > 对齐。先用尺寸建立大结构，再用间距分组，再用对比做细微区分，最后用对齐收拢全局。反过来做（先抠颜色）就是典型的"细节精致但结构混乱"。</p><p class="note" data-lang="en-US" hidden><b>Priority order</b>: size &gt; space &gt; contrast &gt; alignment. Use size for the big structure, space for grouping, contrast for fine distinctions, and alignment to tie the whole page together at the end. Doing it in reverse (fiddling with colours first) is the classic "polished details, chaotic structure" outcome.</p>
+<div class="theory-card" data-lang="zh-CN"><strong>🧠 理论支点：</strong>为什么"对齐"能带来秩序感？因为视觉系统会把共线元素<b>绑定成一个知觉单元</b>，减少需要单独处理的对象数量（认知心理学里的"组块化 chunking"）。页面上的独立对象越少，处理越快、越像"一个整体"。这也是网格系统（第 4 章）的理论起点。<cite>Robin Williams《The Non-Designer’s Design Book》；Miller 1956 关于组块化的经典论文</cite></div><div class="theory-card" data-lang="en-US" hidden><strong>🧠 Theory: </strong>Why does alignment create order? Because the visual system <b>binds collinear elements into a single perceptual unit</b>, reducing the number of objects it must process separately (the chunking effect in cognitive psychology). Fewer independent objects means faster processing and a stronger sense of one whole. This is also where grid systems (Chapter 4) begin.<cite>Robin Williams, <i>The Non-Designer’s Design Book</i>; Miller 1956 on chunking</cite></div>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 案例诊断：把四个杠杆一个一个装回去</span>CourseHub v1 的卡片区：标题 16px、正文 16px、标签 16px，卡片内部 padding 21px，卡片之间 margin 13px，标签用下划线表示可点。<b>四个杠杆全部失效</b>：没有尺寸差；<b>组间距（13）竟然小于组内边距（21）</b>，两张卡片在视觉上粘成一整块，读者分不清哪行文字属于哪张卡；对比只剩一条下划线；左对齐线有 2 条。1.2 的演示会把这四个杠杆做成滑杆，让你亲眼看到"层次评分"如何从 9 分涨到 100 分。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 Case diagnosis: reinstalling the four levers one by one</span>The card area of v1: title 16px, body 16px, tags 16px, card padding 21px, gap between cards 13px, tags underlined to signal clickability. <b>All four levers fail</b>: no size difference; <b>the gap between cards (13) is smaller than the padding inside them (21)</b>, so two cards visually merge into one block and readers cannot tell which text belongs to which card; contrast is limited to an underline; there are two competing left edges. The demo for 1.2 turns the levers into sliders so you can watch the hierarchy score climb from 9 to 100.</div>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① 用 clamp() 让尺寸杠杆自己也"响应式"</h3><h3 data-lang="en-US" hidden>Key code ① Make the size lever itself responsive with clamp()</h3>
+<p class="code-purpose" data-lang="zh-CN">固定字号会让层次在小屏上失效（39px 标题在 320px 屏幕上很凶），clamp() 让"倍率"随视口平滑变化，而不是靠断点硬切。</p><p class="code-purpose" data-lang="en-US" hidden>Fixed sizes break hierarchy on small screens (a 39px heading is aggressive at 320px). clamp() lets the ratio change smoothly with the viewport instead of snapping at breakpoints.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line">/* <span class="star">⭐</span> 关键点 ①：clamp(最小值, 弹性值, 最大值)</span>
+   中间那项用 vw，两侧兜住<span class="str">"太小看不清 / 太大挤爆"</span> */
+<span class="sel">h1</span> {
+  <span class="prop">font-size</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.2rem</span> + <span class="num">2.5vw</span>, <span class="num">2.75rem</span>);
+}
+<span class="cmt">/* 读法：视口 320px → 约 28px 底线；视口 1440px → 约 44px 上限 */</span>
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ②：把比例的"下限"锁住，保证层次永不消失 */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--step-4</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.1rem</span> + <span class="num">2.4vw</span>, <span class="num">2.75rem</span>);
+  <span class="prop">--step-3</span>: clamp(<span class="num">1.375rem</span>, <span class="num">1rem</span> + <span class="num">1.2vw</span>, <span class="num">2rem</span>);
+  <span class="prop">--step-1</span>: <span class="num">1.25rem</span>;             <span class="cmt">/* 卡片标题不参与缩放，保证小屏也压得住正文 */</span>
+}</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line">/* <span class="star">⭐</span> Key point ①: clamp(min, preferred, max)</span>
+   the middle value uses vw; the outer bounds stop <span class="str">"too small"</span> / <span class="str">"too big"</span> */
+<span class="sel">h1</span> {
+  <span class="prop">font-size</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.2rem</span> + <span class="num">2.5vw</span>, <span class="num">2.75rem</span>);
+}
+<span class="cmt">/* Reads as: at 320px viewport → about 28px floor; at 1440px → about 44px ceiling */</span>
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ②: lock the lower bound of each step so hierarchy never collapses */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--step-4</span>: clamp(<span class="num">1.75rem</span>, <span class="num">1.1rem</span> + <span class="num">2.4vw</span>, <span class="num">2.75rem</span>);
+  <span class="prop">--step-3</span>: clamp(<span class="num">1.375rem</span>, <span class="num">1rem</span> + <span class="num">1.2vw</span>, <span class="num">2rem</span>);
+  <span class="prop">--step-1</span>: <span class="num">1.25rem</span>;             <span class="cmt">/* card titles do not scale, so they still beat body text on phones */</span>
+}</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>很多人直接用 <code>font-size: 2.5vw</code>，这在窄视口会小到读不了，在宽视口又大到失控。<code>clamp()</code> 的价值在于<b>两侧兜底</b>，让中间那段可以自由插值。另一个细节：文字缩放必须与用户的浏览器缩放共存（WCAG 1.4.4），所以用 <code>rem</code> 而不是 <code>px</code> 表达 clamp 的上下限——用户放大字号时，<code>rem</code> 会跟着长大，<code>px</code> 不会。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>Many people write <code>font-size: 2.5vw</code>, which becomes unreadably small on narrow viewports and absurdly large on wide ones. The value of <code>clamp()</code> is <b>bounding both ends</b> so the middle can interpolate freely. One more detail: text scaling must coexist with browser zoom (WCAG 1.4.4), so express the clamp bounds in <code>rem</code>, not <code>px</code> — <code>rem</code> grows when the user increases the default font size, <code>px</code> does not.</p>
+<h3 data-lang="zh-CN">关键代码 ② 间距的三级语义：用命名表达关系</h3><h3 data-lang="en-US" hidden>Key code ② Three spacing levels: naming the relationship</h3>
+<p class="code-purpose" data-lang="zh-CN">gap/margin 的取值不该由"这里看起来空多少"决定，而应由"这两个元素是什么关系"决定。</p><p class="code-purpose" data-lang="en-US" hidden>gap/margin values should not be chosen by "how empty does it look here" but by "what is the relationship between these two elements".</p>
+<pre data-lang="zh-CN"><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ③：三个语义层级，组内 &lt; 组间 &lt; 区块间，永远保持 1 : 2 : 4 的量级关系 */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--gap-inline</span>: <span class="num">0.5rem</span>;   <span class="cmt">/*  8px  同一句话里的元素（图标 + 文字） */</span>
+  <span class="prop">--gap-stack</span>:  <span class="num">1rem</span>;     <span class="cmt">/* 16px  同一块内的多行（标题 + 正文）   */</span>
+  <span class="prop">--gap-group</span>:  <span class="num">2rem</span>;     <span class="cmt">/* 32px  不同块之间（卡片 → 卡片）        */</span>
+  <span class="prop">--gap-block</span>:  <span class="num">4rem</span>;     <span class="cmt">/* 64px  不同区块之间（章节 → 章节）      */</span>
+}
+
+<span class="sel">.card</span> {
+  <span class="prop">padding</span>: var(<span class="prop">--gap-stack</span>);
+<span class="hl-line">  /* <span class="star">⭐</span> 关键点 ④：用 flex + gap 而不是给子元素加 margin，</span>
+     这样子元素无需知道自己在第几个，也不会产生外边距折叠 */
+  <span class="prop">display</span>: flex;
+  <span class="prop">flex-direction</span>: column;
+  <span class="prop">gap</span>: var(<span class="prop">--gap-inline</span>);
+}
+<span class="sel">.card + .card</span> { <span class="prop">margin-block-start</span>: var(<span class="prop">--gap-group</span>); }</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ③: three semantic levels — within &lt; between &lt; between sections, always 1 : 2 : 4 */</span></span>
+<span class="sel">:root</span> {
+  <span class="prop">--gap-inline</span>: <span class="num">0.5rem</span>;   <span class="cmt">/*  8px  elements inside one phrase (icon + label) */</span>
+  <span class="prop">--gap-stack</span>:  <span class="num">1rem</span>;     <span class="cmt">/* 16px  lines inside one block (title + body)   */</span>
+  <span class="prop">--gap-group</span>:  <span class="num">2rem</span>;     <span class="cmt">/* 32px  between blocks (card → card)            */</span>
+  <span class="prop">--gap-block</span>:  <span class="num">4rem</span>;     <span class="cmt">/* 64px  between sections (section → section)    */</span>
+}
+
+<span class="sel">.card</span> {
+  <span class="prop">padding</span>: var(<span class="prop">--gap-stack</span>);
+<span class="hl-line">  /* <span class="star">⭐</span> Key point ④: prefer flex + gap over margins on children —</span>
+     children need not know their index, and no margin collapsing occurs */
+  <span class="prop">display</span>: flex;
+  <span class="prop">flex-direction</span>: column;
+  <span class="prop">gap</span>: var(<span class="prop">--gap-inline</span>);
+}
+<span class="sel">.card + .card</span> { <span class="prop">margin-block-start</span>: var(<span class="prop">--gap-group</span>); }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>把间距<b>命名成关系</b>（inline / stack / group / block）而不是命名成尺寸（sm / md / lg），是从"调样式"升级到"做系统"的关键一步。因为当你写 <code>gap: var(--gap-group)</code> 时，代码里明确记录了"这两个东西不属于一组"这个<b>意图</b>；而 <code>gap: 32px</code> 只记录了数字，半年后没人知道能不能改。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>Naming spacing by <b>relationship</b> (inline / stack / group / block) instead of by size (sm / md / lg) is what upgrades you from styling to building a system. Writing <code>gap: var(--gap-group)</code> records the <b>intent</b> "these two do not belong together"; <code>gap: 32px</code> records only a number, and six months later nobody knows whether it is safe to change.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 四个滑杆分别对应尺寸/间距/对比/对齐四个杠杆，实时渲染同一组课程卡片；右侧显示"层次评分"、首屏焦点顺序与对齐线数量。把滑杆全拉到最低，就得到 CourseHub v1 的效果。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Four sliders drive size / space / contrast / alignment on the same set of course cards in real time. The panel shows a hierarchy score, the first-glance focus order and the number of alignment lines. Drag everything to the minimum to reproduce CourseHub v1.</p><div class="demo-mount" data-demo="d-1-2"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch-1-3">
+      <h2 data-lang="zh-CN">1.3 用系统而不是手感：8pt 网格与纵向节奏</h2>
+      <h2 data-lang="en-US" hidden>1.3 Systems, not vibes: the 8pt grid and vertical rhythm</h2>
+      <p class="chapter-subtitle" data-lang="zh-CN">为什么专业界面里的间距总是 4 的倍数？为什么"对不齐"是一种可以被测量的误差？</p>
+      <p class="chapter-subtitle" data-lang="en-US" hidden>Why are spacings in professional interfaces always multiples of 4? And why is misalignment a measurable error?</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="explain" aria-selected="true" data-i18n="tab.explain"></button>
+        <button class="tab-btn" role="tab" data-tab="code" aria-selected="false" data-i18n="tab.code"></button>
+        <button class="tab-btn" role="tab" data-tab="demo" aria-selected="false" data-i18n="tab.demo"></button>
+      </div>
+
+      <div class="tab-panels">
+        <div class="tab-panel active" data-panel="explain" role="tabpanel">
+          <div class="panel-card">
+<p data-lang="zh-CN">如果每个间距都靠手感定，团队里 5 个人会得到 5 套数值，页面必然"看着不齐"。解决办法不是"更用心"，而是<b>把自由度砍掉</b>：只允许从一套固定的间距序列里取值。这就是 <b>spacing scale</b>（间距尺度），最常见的实现是 8pt 网格。</p><p data-lang="en-US" hidden>If every gap is chosen by feel, five people on a team produce five value sets and the page inevitably looks misaligned. The fix is not "more care" but <b>removing degrees of freedom</b>: only values from one fixed sequence are allowed. That sequence is the <b>spacing scale</b>, most commonly implemented as an 8pt grid.</p>
+<h3 data-lang="zh-CN">为什么是 8（和 4）？</h3><h3 data-lang="en-US" hidden>Why 8 (and 4)?</h3>
+<ul data-lang="zh-CN"><li><b>可整除性好</b>：8 能被 2、4 整除，在 1x / 1.5x / 2x / 3x 各种像素密度下都能落在物理像素上，不会出现半像素导致的模糊。</li><li><b>与常见字号/行高天然对齐</b>：16px 正文、24px 行高的组合正好是 8 的倍数，纵向节奏容易对齐。</li><li><b>相邻级别的视觉差异足够明显</b>：8 → 16 → 24 → 32 每一级都能被眼睛分辨，而 5 → 10 → 15 变化太碎，看起来像"没对齐"。</li><li><b>4pt 是补充</b>：图标与文字之间这类"微间距"用 4 的奇数倍（4、12、20），8 不够用。</li></ul><ul data-lang="en-US" hidden><li><b>Divisibility</b>: 8 divides by 2 and 4, so it lands on physical pixels at 1x / 1.5x / 2x / 3x densities without half-pixel blur.</li><li><b>Aligns with common type and line heights</b>: 16px body text with 24px line height are both multiples of 8, so vertical rhythm lines up naturally.</li><li><b>Adjacent steps are clearly distinguishable</b>: 8 → 16 → 24 → 32 are each visible to the eye, whereas 5 → 10 → 15 are too granular and read as "not aligned".</li><li><b>4pt is the escape hatch</b>: micro-spacing such as icon-to-label needs odd multiples of 4 (4, 12, 20), where 8 is too coarse.</li></ul>
+<div class="theory-card" data-lang="zh-CN"><strong>🧠 理论支点：</strong>这套思路是排版学里 <b>baseline grid</b>（基线网格）的现代版本。传统印刷把正文行位置固定在一条条基线上，标题、图片、图注都必须"落在线上"，于是整本书产生统一的节奏。网页里行高不固定、元素高度不一，所以现代做法是<b>用统一的间距步长代替基线</b>，把"节奏"从行迁移到块。<cite>Josef Müller-Brockmann《Grid Systems in Graphic Design》；Material Design / Atlassian Design System 的 8pt 网格规范</cite></div><div class="theory-card" data-lang="en-US" hidden><strong>🧠 Theory: </strong>This is the modern descendant of the <b>baseline grid</b> in typography. Print fixed body lines onto a baseline so headings, images and captions all "land on the line", giving a book one rhythm. On the web line heights vary and elements differ in height, so the modern approach <b>replaces the baseline with a uniform spacing step</b>, moving rhythm from lines to blocks.<cite>Josef Müller-Brockmann, <i>Grid Systems in Graphic Design</i>; the 8pt grid specs in Material Design and the Atlassian Design System</cite></div>
+<h3 data-lang="zh-CN">纵向节奏（vertical rhythm）</h3><h3 data-lang="en-US" hidden>Vertical rhythm</h3>
+<p data-lang="zh-CN">纵向节奏指：页面从上到下，各行/各块的垂直位置呈现出可预测的重复关系。做法是让<b>行高本身也是步长的整数倍</b>：正文 <code>font-size: 16px; line-height: 24px</code>（3 × 8），卡片间距 32px（4 × 8），区块间距 64px（8 × 8）。这样即使元素高度不同，它们的边界也总落在同一批"刻度"上。</p><p data-lang="en-US" hidden>Vertical rhythm means the vertical positions of lines and blocks repeat in a predictable way from top to bottom. Achieve it by making <b>line heights multiples of the step too</b>: body text <code>font-size: 16px; line-height: 24px</code> (3 × 8), card gaps 32px (4 × 8), section gaps 64px (8 × 8). Then even elements of different heights always end on the same set of ticks.</p>
+<p class="note" data-lang="zh-CN"><b>可测量的"对齐误差"</b>：在 1.3 的演示里，每个元素的边界都会与最近的 8pt 刻度比较，差值就是它的对齐误差。误差为 0 的元素边界会连成水平线；误差不为 0 的元素会成为"孤立的一条边"。<b>一眼看去"有点乱"的页面，往往就是有 3–5 个元素带着 3–5px 的误差。</b></p><p class="note" data-lang="en-US" hidden><b>Measurable alignment error</b>: in the 1.3 demo, every element edge is compared with the nearest 8pt tick and the difference is its alignment error. Edges with zero error join a horizontal line; edges with non-zero error stand alone. <b>A page that "looks a bit messy" usually has three to five elements carrying three to five pixels of error.</b></p>
+<div class="case-card" data-lang="zh-CN"><span class="case-title">🧩 案例诊断：问题 ② 间距无系统</span>CourseHub v1 的间距来自设计师"看着调"：卡片内边距 21px、卡片间距 13px、区块间距 37px。这三个数互不成倍数，于是出现两个后果：<b>①分组信号反了</b>——卡片之间的留白（13px）比卡片自己的内边距（21px）还小，两张卡片在视觉上粘成一整块；<b>②边缘全部脱离刻度</b>——21、13、37 除以 8 的余数分别是 5、5、5，于是每个元素的边缘都落在 8pt 刻度之外 5px 处。换成 24 / 32 / 64 之后，组间:组内 从 1.44 : 1 变成 4 : 1，最大对齐误差归零，页面立刻"立"住了，而且一个字都不用改。</div><div class="case-card" data-lang="en-US" hidden><span class="case-title">🧩 Case diagnosis: defect ② arbitrary spacing</span>Spacings in v1 were tuned by eye: 21px inside a card, 13px between cards, 37px between sections. None is a multiple of the others, with two consequences. <b>(1) The grouping signal is inverted</b> — the gap between cards (13px) is smaller than the padding inside them (21px), so two cards visually fuse into one block. <b>(2) Every edge falls off the scale</b> — 21, 13 and 37 all leave a remainder of 5 when divided by 8, so every element sits 5px away from the nearest 8pt tick. Switching to 24 / 32 / 64 moves between:within from 1.44:1 to 4:1 and drives the maximum alignment error to zero — the page stands up without changing a single word.</div>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="code" role="tabpanel">
+          <div class="panel-card">
+<h3 data-lang="zh-CN">关键代码 ① 8pt 间距尺度：写成量表，而不是散落的数字</h3><h3 data-lang="en-US" hidden>Key code ① The 8pt scale: one table, not scattered numbers</h3>
+<p class="code-purpose" data-lang="zh-CN">把允许使用的间距值穷举成 token，团队里任何人都不再需要"猜"。</p><p class="code-purpose" data-lang="en-US" hidden>Enumerate the allowed spacing values as tokens so nobody on the team has to guess.</p>
+<pre data-lang="zh-CN"><code><span class="hl-line">/* <span class="star">⭐</span> 关键点 ①：整张表就是<span class="str">"允许使用的全部间距"</span>，</span>
+   代码审查时任何不在表里的数字都属于违规 */
+<span class="sel">:root</span> {
+  <span class="prop">--space-0</span>: <span class="num">0</span>;
+  <span class="prop">--space-1</span>: <span class="num">0.25rem</span>;  <span class="cmt">/*  4px  micro：图标与文字 */</span>
+  <span class="prop">--space-2</span>: <span class="num">0.5rem</span>;   <span class="cmt">/*  8px  组内 */</span>
+  <span class="prop">--space-3</span>: <span class="num">0.75rem</span>;  <span class="cmt">/* 12px  组内（偏大的组） */</span>
+  <span class="prop">--space-4</span>: <span class="num">1rem</span>;     <span class="cmt">/* 16px  块内 */</span>
+  <span class="prop">--space-5</span>: <span class="num">1.5rem</span>;   <span class="cmt">/* 24px  块内（宽松） */</span>
+  <span class="prop">--space-6</span>: <span class="num">2rem</span>;     <span class="cmt">/* 32px  块间 */</span>
+  <span class="prop">--space-8</span>: <span class="num">4rem</span>;     <span class="cmt">/* 64px  区块间 */</span>
+}
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> 关键点 ②：用"尺子"约束自己 —— 布局容器只认这几个值 */</span></span>
+<span class="sel">.section</span> { <span class="prop">padding-block</span>: var(<span class="prop">--space-8</span>); }
+<span class="sel">.card-grid</span> { <span class="prop">gap</span>: var(<span class="prop">--space-6</span>); }
+<span class="sel">.card</span> { <span class="prop">padding</span>: var(<span class="prop">--space-5</span>); }
+<span class="sel">.card &gt; * + *</span> { <span class="prop">margin-block-start</span>: var(<span class="prop">--space-2</span>); }</code></pre><pre data-lang="en-US" hidden><code><span class="hl-line">/* <span class="star">⭐</span> Key point ①: this table IS the complete set of allowed spacings.</span>
+   In code review, any number not in the table is a violation. */
+<span class="sel">:root</span> {
+  <span class="prop">--space-0</span>: <span class="num">0</span>;
+  <span class="prop">--space-1</span>: <span class="num">0.25rem</span>;  <span class="cmt">/*  4px  micro: icon ↔ label */</span>
+  <span class="prop">--space-2</span>: <span class="num">0.5rem</span>;   <span class="cmt">/*  8px  within a group */</span>
+  <span class="prop">--space-3</span>: <span class="num">0.75rem</span>;  <span class="cmt">/* 12px  within a larger group */</span>
+  <span class="prop">--space-4</span>: <span class="num">1rem</span>;     <span class="cmt">/* 16px  within a block */</span>
+  <span class="prop">--space-5</span>: <span class="num">1.5rem</span>;   <span class="cmt">/* 24px  within a loose block */</span>
+  <span class="prop">--space-6</span>: <span class="num">2rem</span>;     <span class="cmt">/* 32px  between blocks */</span>
+  <span class="prop">--space-8</span>: <span class="num">4rem</span>;     <span class="cmt">/* 64px  between sections */</span>
+}
+
+<span class="hl-line"><span class="cmt">/* <span class="star">⭐</span> Key point ②: constrain yourself to the ruler — containers only use these values */</span></span>
+<span class="sel">.section</span> { <span class="prop">padding-block</span>: var(<span class="prop">--space-8</span>); }
+<span class="sel">.card-grid</span> { <span class="prop">gap</span>: var(<span class="prop">--space-6</span>); }
+<span class="sel">.card</span> { <span class="prop">padding</span>: var(<span class="prop">--space-5</span>); }
+<span class="sel">.card &gt; * + *</span> { <span class="prop">margin-block-start</span>: var(<span class="prop">--space-2</span>); }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong>注意 token 名里的数字是<b>尺度的索引</b>（1、2、3…）而不是像素值，这样以后想整体放大间距（比如做"宽松版"主题），只改表里的 px，所有引用点自动跟随。<b>坑</b>：不要让 token 名带具体用途（如 <code>--space-card</code>），一旦某个间距被两个地方用在不同语义上，命名就会互相拉扯；语义交给使用处（<code>gap: var(--space-6)</code> 已经说明了它是"块间"）。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>Note the numbers in the token names are <b>scale indices</b> (1, 2, 3…) rather than pixel values, so a global "roomier theme" only needs the px column changed and every reference follows. <b>Pitfall</b>: do not name tokens after their use (e.g. <code>--space-card</code>) — once one spacing serves two different meanings, the name fights itself. Meaning belongs at the point of use, where <code>gap: var(--space-6)</code> already says "between blocks".</p>
+<h3 data-lang="zh-CN">关键代码 ② 纵向节奏：给内容装一条隐形基线</h3><h3 data-lang="en-US" hidden>Key code ② Vertical rhythm: an invisible baseline for content</h3>
+<p class="code-purpose" data-lang="zh-CN">让行高与间距共享同一套刻度，页面从上到下就会落在一批固定的水平线上。</p><p class="code-purpose" data-lang="en-US" hidden>Make line heights and spacings share one set of ticks, and the whole page lands on a fixed set of horizontal lines.</p>
+<pre data-lang="zh-CN"><code><span class="sel">:root</span> {
+  <span class="prop">--leading</span>: <span class="num">1.5</span>;                 <span class="cmt">/* 行高倍率 */</span>
+  <span class="prop">--rhythm</span>: calc(<span class="num">1rem</span> * var(<span class="prop">--leading</span>));   <span class="cmt">/* 24px = 3 × 8，节奏单位 */</span>
+}
+
+<span class="sel">body</span> {
+  <span class="prop">font-size</span>: <span class="num">1rem</span>;                <span class="cmt">/* 16px */</span>
+<span class="hl-line">  <span class="prop">line-height</span>: var(<span class="prop">--rhythm</span>);     <span class="cmt">/* <span class="star">⭐</span> 关键点 ③：行高 = 节奏单位，正文每行都落在刻度上 */</span></span>
+}
+
+<span class="sel">h1</span> {
+<span class="hl-line">  <span class="cmt">/* <span class="star">⭐</span> 关键点 ④：标题行高也得是步长整数倍，否则下一段就会错位 */</span></span>
+  <span class="prop">font-size</span>: var(<span class="prop">--step-4</span>);                  <span class="cmt">/* 约 44px */</span>
+  <span class="prop">line-height</span>: calc(var(<span class="prop">--rhythm</span>) * <span class="num">2</span>);      <span class="cmt">/* 48px = 6 × 8 */</span>
+  <span class="prop">margin-block</span>: <span class="num">0</span> calc(var(<span class="prop">--rhythm</span>) * <span class="num">1</span>);   <span class="cmt">/* 上 0，下 24px */</span>
+}
+
+<span class="cmt">/* 用 margin-top 补齐"高度不是步长倍数"的元素（如图片、按钮） */</span>
+<span class="sel">.media</span> { <span class="prop">margin-block</span>: calc(var(<span class="prop">--rhythm</span>) * <span class="num">1.5</span>); }</code></pre><pre data-lang="en-US" hidden><code><span class="sel">:root</span> {
+  <span class="prop">--leading</span>: <span class="num">1.5</span>;                 <span class="cmt">/* line-height ratio */</span>
+  <span class="prop">--rhythm</span>: calc(<span class="num">1rem</span> * var(<span class="prop">--leading</span>));   <span class="cmt">/* 24px = 3 × 8, the rhythm unit */</span>
+}
+
+<span class="sel">body</span> {
+  <span class="prop">font-size</span>: <span class="num">1rem</span>;                <span class="cmt">/* 16px */</span>
+<span class="hl-line">  <span class="prop">line-height</span>: var(<span class="prop">--rhythm</span>);     <span class="cmt">/* <span class="star">⭐</span> Key point ③: line height = rhythm unit, every body line lands on a tick */</span></span>
+}
+
+<span class="sel">h1</span> {
+<span class="hl-line">  <span class="cmt">/* <span class="star">⭐</span> Key point ④: heading line heights must also be whole multiples, or the next block drifts */</span></span>
+  <span class="prop">font-size</span>: var(<span class="prop">--step-4</span>);                  <span class="cmt">/* about 44px */</span>
+  <span class="prop">line-height</span>: calc(var(<span class="prop">--rhythm</span>) * <span class="num">2</span>);      <span class="cmt">/* 48px = 6 × 8 */</span>
+  <span class="prop">margin-block</span>: <span class="num">0</span> calc(var(<span class="prop">--rhythm</span>) * <span class="num">1</span>);   <span class="cmt">/* 0 above, 24px below */</span>
+}
+
+<span class="cmt">/* Pad elements whose height is not a multiple (images, buttons) with margin */</span>
+<span class="sel">.media</span> { <span class="prop">margin-block</span>: calc(var(<span class="prop">--rhythm</span>) * <span class="num">1.5</span>); }</code></pre>
+<p class="key-point" data-lang="zh-CN"><strong>关键点解释：</strong><code>line-height</code> 写<b>无单位数值</b>（1.5）是最稳的：它按各自字号计算，标题不会因为字号大而获得过大的行距；但为了共享节奏，这里反而要给标题显式指定绝对行高（48px）。这是一个真实的取舍：<b>无单位行高利于阅读，绝对行高利于对齐</b>。推荐做法是正文用无单位、标题与"要落格"的元素用绝对行高，并在注释里说明原因。</p><p class="key-point" data-lang="en-US" hidden><strong>Key point: </strong>A <b>unitless</b> <code>line-height</code> (1.5) is the safest default: it scales with each font size so headings never inherit huge leading. Yet to share a rhythm we deliberately give headings an absolute line height (48px). That is a genuine trade-off: <b>unitless is better for reading, absolute is better for alignment</b>. The recommended pattern: unitless for body text, absolute for headings and for anything that must land on the grid — with the reason in a comment.</p>
+          </div>
+        </div>
+        <div class="tab-panel" data-panel="demo" role="tabpanel">
+          <div class="panel-card">
+<p class="demo-hint" data-lang="zh-CN">🎛️ 切换 4pt / 8pt / "手感"三套间距方案，叠加基线网格图层，实时统计每个元素的对齐误差（px）与误差分布直方图；点击"对齐漂移"按钮可以让误差动画呈现在页面上。</p><p class="demo-hint" data-lang="en-US" hidden>🎛️ Switch between the 4pt, 8pt and "by feel" spacing schemes, overlay the baseline grid, and read each element’s alignment error in pixels with a histogram. Hit "alignment drift" to animate the error on the page.</p><div class="demo-mount" data-demo="d-1-3"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer class="lesson-footer">
+  <p data-i18n="footer.copy"></p>
+</footer>
+
+<nav class="chapter-pager" aria-label="chapter pager">
+  <span class="pager-prev empty"></span>
+  <a class="pager-portal" href="../" data-i18n="common.portal"></a>
+  <a class="pager-next" href="../lesson-02/"><span class="pager-dir" data-i18n="common.next"></span><span class="pager-title" data-lang="zh-CN">第 2 章 文档流与盒模型：布局的物理定律</span><span class="pager-title" data-lang="en-US" hidden>Chapter 2 Flow and the box model: the physics of layout</span></a>
+</nav>
+
+<script type="module" src="../assets/lesson.js"></script>
+<script type="module" src="../assets/lang.js"></script>
+</body>
+</html>

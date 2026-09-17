@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="《页面布局之道》—— 中英双语交互教学网站：讲解 / 关键代码 / 动态演示三合一的页面布局课程" />
+<title>《页面布局之道》· The Art of Page Layout</title>
+<link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+<link rel="stylesheet" href="./assets/styles.css" />
+<link rel="stylesheet" href="./assets/lesson.css" />
+</head>
+<body>
+<div class="lang-switch lang-switch-floating" role="group" data-i18n-aria="nav.lang.label"></div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="hero-tag">PAGE LAYOUT · 页面布局</p>
+    <h1 data-lang="zh-CN">《页面布局之道》</h1>
+    <h1 data-lang="en-US" hidden>The Art of Page Layout</h1>
+    <p class="hero-subtitle" data-lang="zh-CN">从「摆盒子」到「设计信息」：6 章 18 节，讲解 · 关键代码 · 动态演示三合一，围绕同一个案例把布局讲透。</p>
+    <p class="hero-subtitle" data-lang="en-US" hidden>From "pushing boxes around" to designing information: 6 chapters, 18 sections, each pairing explanation, key code and a live interactive demo — all built around one running case.</p>
+    <p class="hero-meta" data-lang="zh-CN">零依赖静态站点（纯 HTML/CSS/ESM）· 中英双语 · 全部演示可离线运行 · 可直接部署到 GitHub Pages</p>
+    <p class="hero-meta" data-lang="en-US" hidden>Zero-dependency static site (HTML/CSS/ESM) · Bilingual · Every demo runs offline · Deploys straight to GitHub Pages</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>6</b><span data-lang="zh-CN">章 / chapters</span><span data-lang="en-US" hidden>chapters</span></div>
+      <div class="hero-stat"><b>18</b><span data-lang="zh-CN">节 / sections</span><span data-lang="en-US" hidden>sections</span></div>
+      <div class="hero-stat"><b>18</b><span data-lang="zh-CN">个交互演示 / live demos</span><span data-lang="en-US" hidden>live demos</span></div>
+      <div class="hero-stat"><b>2</b><span data-lang="zh-CN">种语言 / languages</span><span data-lang="en-US" hidden>languages</span></div>
+      <div class="hero-stat"><b>0</b><span data-lang="zh-CN">运行时依赖 / runtime deps</span><span data-lang="en-US" hidden>runtime deps</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <a href="#chapters" data-lang="zh-CN">📚 章节</a><a href="#chapters" data-lang="en-US" hidden>📚 Chapters</a>
+  <a href="#case" data-lang="zh-CN">🧩 贯穿案例</a><a href="#case" data-lang="en-US" hidden>🧩 Running Case</a>
+  <a href="#howto" data-lang="zh-CN">▶️ 使用方式</a><a href="#howto" data-lang="en-US" hidden>▶️ How to Use</a>
+  <a href="./supplementary/" data-lang="zh-CN">🎛️ 演示索引</a><a href="./supplementary/" data-lang="en-US" hidden>🎛️ Demo Index</a>
+  <a href="#about" data-lang="zh-CN">ℹ️ 关于</a><a href="#about" data-lang="en-US" hidden>ℹ️ About</a>
+</nav>
+
+<main>
+  <section id="chapters" class="section">
+    <h2 data-lang="zh-CN">📚 课程章节</h2>
+    <h2 data-lang="en-US" hidden>📚 Course Chapters</h2>
+    <p class="section-lead" data-lang="zh-CN">每个小节含 3 个 tab：📖 讲解（理论 + 案例诊断）/ ⌨️ 关键代码（带 ⭐ 关键行与踩坑说明）/ ▶️ 演示（可拖拽、可调参、可破坏性测试的实时沙盒）。点击任一卡片进入章节。</p>
+    <p class="section-lead" data-lang="en-US" hidden>Every section has 3 tabs: 📖 Explain (theory + case diagnosis) / ⌨️ Key Code (with ⭐ marked lines and pitfall notes) / ▶️ Demo (a live sandbox you can drag, tune and stress-test). Click any card to enter.</p>
+    <div class="cards">
+
+        <a class="card available" href="./lesson-01/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 1 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 1 · 3 sections</div>
+          <h3 data-lang="zh-CN">布局是信息设计</h3>
+          <h3 data-lang="en-US" hidden>Layout Is Information Design</h3>
+          <p class="card-desc" data-lang="zh-CN">格式塔原理、视觉层次的四个杠杆、模数尺度与 8pt 网格 —— 为什么 CourseHub 的报名按钮没人找到？为什么间距"看着别扭"？本章给出可量化的答案。</p>
+          <p class="card-desc" data-lang="en-US" hidden>Gestalt principles, the four levers of visual hierarchy, modular scales and the 8pt grid — why could nobody find the Enroll button on CourseHub, and why did the spacing "feel wrong"? This chapter makes it measurable.</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">格式塔原理</span><span data-lang="en-US" hidden>Gestalt</span></li>
+            <li><span data-lang="zh-CN">视觉层次</span><span data-lang="en-US" hidden>Visual hierarchy</span></li>
+            <li><span data-lang="zh-CN">CRAP 四原则</span><span data-lang="en-US" hidden>CRAP principles</span></li>
+            <li><span data-lang="zh-CN">模数尺度</span><span data-lang="en-US" hidden>Modular scale</span></li>
+            <li><span data-lang="zh-CN">8pt 网格</span><span data-lang="en-US" hidden>8pt grid</span></li>
+            <li><span data-lang="zh-CN">纵向节奏</span><span data-lang="en-US" hidden>Vertical rhythm</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+
+        <a class="card available" href="./lesson-02/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 2 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 2 · 3 sections</div>
+          <h3 data-lang="zh-CN">文档流与盒模型：布局的物理定律</h3>
+          <h3 data-lang="en-US" hidden>Flow and the box model: the physics of layout</h3>
+          <p class="card-desc" data-lang="zh-CN">正常流、格式化上下文、包含块、外边距折叠、层叠上下文 —— 以及为什么用 <code>position:absolute</code> 摆出来的页面在真实内容面前必然崩坏。</p>
+          <p class="card-desc" data-lang="en-US" hidden>Normal flow, formatting contexts, containing blocks, margin collapsing, stacking contexts — and why a page positioned with <code>position:absolute</code> is guaranteed to break once real content arrives.</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">正常流</span><span data-lang="en-US" hidden>Normal flow</span></li>
+            <li><span data-lang="zh-CN">格式化上下文</span><span data-lang="en-US" hidden>Formatting context</span></li>
+            <li><span data-lang="zh-CN">盒模型</span><span data-lang="en-US" hidden>Box model</span></li>
+            <li><span data-lang="zh-CN">外边距折叠</span><span data-lang="en-US" hidden>Margin collapsing</span></li>
+            <li><span data-lang="zh-CN">层叠上下文</span><span data-lang="en-US" hidden>Stacking context</span></li>
+            <li><span data-lang="zh-CN">position: sticky</span><span data-lang="en-US" hidden>position: sticky</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+
+        <a class="card available" href="./lesson-03/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 3 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 3 · 3 sections</div>
+          <h3 data-lang="zh-CN">一维布局：Flexbox</h3>
+          <h3 data-lang="en-US" hidden>One-dimensional layout: flexbox</h3>
+          <p class="card-desc" data-lang="zh-CN">主轴与交叉轴、justify 与 align 的语义、<code>flex-grow/shrink/basis</code> 的空间分配算法、<code>min-width:auto</code> 溢出陷阱，以及四个能覆盖 80% 场景的一维模板。</p>
+          <p class="card-desc" data-lang="en-US" hidden>Main and cross axis, the semantics of justify vs align, the space-distribution algorithm behind <code>flex-grow/shrink/basis</code>, the <code>min-width:auto</code> overflow trap, and four one-dimensional templates that cover 80% of real cases.</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">主轴与交叉轴</span><span data-lang="en-US" hidden>Main / cross axis</span></li>
+            <li><span data-lang="zh-CN">弹性空间分配</span><span data-lang="en-US" hidden>Flexible space</span></li>
+            <li><span data-lang="zh-CN">min-width:auto 陷阱</span><span data-lang="en-US" hidden>min-width:auto trap</span></li>
+            <li><span data-lang="zh-CN">媒体对象</span><span data-lang="en-US" hidden>Media object</span></li>
+            <li><span data-lang="zh-CN">等高卡片</span><span data-lang="en-US" hidden>Equal-height cards</span></li>
+            <li><span data-lang="zh-CN">推与挤</span><span data-lang="en-US" hidden>Push and squeeze</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+
+        <a class="card available" href="./lesson-04/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 4 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 4 · 3 sections</div>
+          <h3 data-lang="zh-CN">二维布局：Grid 与网格系统</h3>
+          <h3 data-lang="en-US" hidden>Two-dimensional layout: grid and grid systems</h3>
+          <p class="card-desc" data-lang="zh-CN">瑞士网格系统、栏栅与水槽、<code>fr</code> 的本质是"分配剩余空间"、<code>minmax/auto-fit/auto-fill</code> 的差别、以及用 <code>grid-template-areas</code> 把布局写成一份可读的契约。</p>
+          <p class="card-desc" data-lang="en-US" hidden>The Swiss grid system, columns and gutters, why <code>fr</code> really means "share the leftover space", the difference between <code>minmax/auto-fit/auto-fill</code>, and writing layout as a readable contract with <code>grid-template-areas</code>.</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">瑞士网格系统</span><span data-lang="en-US" hidden>Swiss grid system</span></li>
+            <li><span data-lang="zh-CN">栏栅与水槽</span><span data-lang="en-US" hidden>Columns & gutters</span></li>
+            <li><span data-lang="zh-CN">fr 单位</span><span data-lang="en-US" hidden>The fr unit</span></li>
+            <li><span data-lang="zh-CN">auto-fit / auto-fill</span><span data-lang="en-US" hidden>auto-fit / auto-fill</span></li>
+            <li><span data-lang="zh-CN">grid-template-areas</span><span data-lang="en-US" hidden>grid-template-areas</span></li>
+            <li><span data-lang="zh-CN">min-content / max-content</span><span data-lang="en-US" hidden>min- / max-content</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+
+        <a class="card available" href="./lesson-05/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 5 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 5 · 3 sections</div>
+          <h3 data-lang="zh-CN">响应式与内在布局</h3>
+          <h3 data-lang="en-US" hidden>Responsive and intrinsic layout</h3>
+          <p class="card-desc" data-lang="zh-CN">内容驱动断点、容器查询、内在尺寸与流式排版 —— 从"为 5 种屏幕各写一套"到"写一套、让它自己适应"。</p>
+          <p class="card-desc" data-lang="en-US" hidden>Content-driven breakpoints, container queries, intrinsic sizing and fluid typography — moving from "one layout per screen size" to "one layout that adapts".</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">内容驱动断点</span><span data-lang="en-US" hidden>Content-driven breakpoints</span></li>
+            <li><span data-lang="zh-CN">移动优先</span><span data-lang="en-US" hidden>Mobile first</span></li>
+            <li><span data-lang="zh-CN">容器查询</span><span data-lang="en-US" hidden>Container queries</span></li>
+            <li><span data-lang="zh-CN">内在尺寸</span><span data-lang="en-US" hidden>Intrinsic sizing</span></li>
+            <li><span data-lang="zh-CN">clamp() 流式排版</span><span data-lang="en-US" hidden>Fluid type with clamp()</span></li>
+            <li><span data-lang="zh-CN">Every Layout 原语</span><span data-lang="en-US" hidden>Every Layout primitives</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+
+        <a class="card available" href="./lesson-06/">
+          <div class="card-status" data-i18n="common.live"></div>
+          <div class="card-num" data-lang="zh-CN">第 6 章 · 3 节</div>
+          <div class="card-num" data-lang="en-US" hidden>Chapter 6 · 3 sections</div>
+          <h3 data-lang="zh-CN">可访问性、原语化与综合案例</h3>
+          <h3 data-lang="en-US" hidden>Accessibility, primitives and the case study</h3>
+          <p class="card-desc" data-lang="zh-CN">阅读顺序与线性化、WCAG 的几条硬指标（Reflow / Resize Text / Text Spacing / Focus Order / Target Size）、布局与外观分离，以及 CourseHub 从 v1 到 v2 的完整改造与评审清单。</p>
+          <p class="card-desc" data-lang="en-US" hidden>Reading order and linearisation, the hard WCAG criteria (Reflow, Resize Text, Text Spacing, Focus Order, Target Size), separating layout from appearance, and the full CourseHub v1 → v2 rebuild with a review checklist.</p>
+          <ul class="card-tags">
+            <li><span data-lang="zh-CN">阅读顺序与线性化</span><span data-lang="en-US" hidden>Reading order</span></li>
+            <li><span data-lang="zh-CN">焦点顺序 WCAG 2.4.3</span><span data-lang="en-US" hidden>Focus order (2.4.3)</span></li>
+            <li><span data-lang="zh-CN">Reflow 1.4.10</span><span data-lang="en-US" hidden>Reflow (1.4.10)</span></li>
+            <li><span data-lang="zh-CN">缩放 200% 1.4.4</span><span data-lang="en-US" hidden>Resize text (1.4.4)</span></li>
+            <li><span data-lang="zh-CN">文本间距 1.4.12</span><span data-lang="en-US" hidden>Text spacing (1.4.12)</span></li>
+            <li><span data-lang="zh-CN">布局原语 / 评审清单</span><span data-lang="en-US" hidden>Primitives & checklist</span></li>
+          </ul>
+          <div class="card-cta" data-i18n="common.enter"></div>
+        </a>
+    </div>
+  </section>
+
+  <section id="case" class="section">
+    <h2 data-lang="zh-CN">🧩 贯穿案例：CourseHub 课程主页，从 v1 到 v2</h2>
+    <h2 data-lang="en-US" hidden>🧩 Running case: The CourseHub landing page, v1 → v2</h2>
+    <p class="section-lead" data-lang="zh-CN">整门课只做一个案例：一门在线课程的主页 CourseHub。它的 v1 版本「能跑」，但在真实使用中暴露了 8 个布局问题。每一章先诊断其中几条，讲清背后的理论与浏览器规则，再用可交互的演示把它修好；第 6 章给出完整的 v1 → v2 对比与布局评审清单。</p>
+    <p class="section-lead" data-lang="en-US" hidden>The whole course works on a single case: the landing page of an online course, CourseHub. Its v1 "works" — yet real usage exposed eight layout defects. Each chapter diagnoses a few of them, explains the underlying theory and browser rules, then fixes them in an interactive demo. Chapter 6 delivers the full v1 → v2 comparison and a layout review checklist.</p>
+    <div class="howto-card">
+      <table class="mini">
+        <thead>
+          <tr>
+            <th data-lang="zh-CN">编号</th><th data-lang="en-US" hidden>#</th>
+            <th data-lang="zh-CN">布局病（v1 的症状）</th><th data-lang="en-US" hidden>Layout defect (symptom in v1)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" data-lang="zh-CN">①</td>
+            <td class="mono" data-lang="en-US" hidden>①</td>
+            <td data-lang="zh-CN"><b>层次缺失</b>：标题、正文、按钮统统 16px，用户 3 秒内找不到「立即报名」。</td>
+            <td data-lang="en-US" hidden><b>No hierarchy</b>: headings, body text and the CTA button are all 16px, so users cannot find "Enroll" within 3 seconds.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">②</td>
+            <td class="mono" data-lang="en-US" hidden>②</td>
+            <td data-lang="zh-CN"><b>间距无系统</b>：21px / 13px / 37px 随手写，节奏混乱，元素间对不齐。</td>
+            <td data-lang="en-US" hidden><b>Arbitrary spacing</b>: 21px, 13px, 37px written by hand; the rhythm is chaotic and edges stop lining up.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">③</td>
+            <td class="mono" data-lang="en-US" hidden>③</td>
+            <td data-lang="zh-CN"><b>用绝对定位摆盒子</b>：header 高度写死 120px，课程标题一长就压住下面的内容。</td>
+            <td data-lang="en-US" hidden><b>Absolute positioning</b>: the header is hard-coded to 120px tall, so a longer course title overlaps the content below.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">④</td>
+            <td class="mono" data-lang="en-US" hidden>④</td>
+            <td data-lang="zh-CN"><b>靠空格对齐导航</b>：菜单项之间用 <code>&amp;nbsp;</code> 和固定宽度撑开，文案一改就错位。</td>
+            <td data-lang="en-US" hidden><b>Space-hacked navigation</b>: menu items are spaced with <code>&amp;nbsp;</code> and fixed widths, so any copy change breaks the alignment.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">⑤</td>
+            <td class="mono" data-lang="en-US" hidden>⑤</td>
+            <td data-lang="zh-CN"><b>卡片高度不齐</b>：三张课程卡长短不一，图片和小屏下的长标题还会撑破容器。</td>
+            <td data-lang="en-US" hidden><b>Uneven cards</b>: the three course cards differ in height, and images or long titles overflow their containers on small screens.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">⑥</td>
+            <td class="mono" data-lang="en-US" hidden>⑥</td>
+            <td data-lang="zh-CN"><b>用 padding 假装网格</b>：三栏靠左右 padding 凑出来，内容与网格对不齐，也无法跨列。</td>
+            <td data-lang="en-US" hidden><b>Fake grid</b>: the three columns are faked with left/right padding, so content never lines up with the grid and items cannot span columns.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">⑦</td>
+            <td class="mono" data-lang="en-US" hidden>⑦</td>
+            <td data-lang="zh-CN"><b>只做桌面端</b>：320px 宽度下出现横向滚动条，点击目标小于 24px。</td>
+            <td data-lang="en-US" hidden><b>Desktop only</b>: at 320px the page scrolls horizontally and tap targets fall below 24px.</td>
+          </tr>
+          <tr>
+            <td class="mono" data-lang="zh-CN">⑧</td>
+            <td class="mono" data-lang="en-US" hidden>⑧</td>
+            <td data-lang="zh-CN"><b>DOM 顺序与视觉顺序不一致</b>：用 <code>order</code> 把侧栏挪到前面，键盘 Tab 顺序乱跳、屏幕阅读器读错。</td>
+            <td data-lang="en-US" hidden><b>DOM order ≠ visual order</b>: <code>order</code> moves the sidebar first visually, so keyboard Tab order jumps around and screen readers read the wrong sequence.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="mt-3" data-lang="zh-CN"><b>为什么要用案例贯穿？</b>布局知识最大的问题是「语法都会，一到真项目就用错」。把每个知识点都挂到同一个案例的具体症状上，你记住的就不是 <code>display:flex</code> 这个语法，而是「这种症状→这种布局算法→这种写法」的对应关系。</p>
+      <p class="mt-3" data-lang="en-US" hidden><b>Why one running case?</b> The real problem with layout knowledge is that people know the syntax but misapply it in real projects. By attaching every concept to a concrete symptom in one case, what you remember is not the syntax <code>display:flex</code> but the mapping "symptom → layout algorithm → idiom".</p>
+    </div>
+  </section>
+
+  <section id="howto" class="section">
+    <h2 data-lang="zh-CN">▶️ 使用方式</h2>
+    <h2 data-lang="en-US" hidden>▶️ How to Use</h2>
+    <div class="howto-grid">
+      
+      <div class="howto-card">
+        <h3 data-lang="zh-CN">🎓 课堂讲解</h3>
+        <h3 data-lang="en-US" hidden>🎓 In class</h3>
+        <p data-lang="zh-CN">打开任一章节，左侧选小节，顶部切换 <b>讲解 / 关键代码 / 演示</b>，可以一边讲一边现场拖参数。快捷键：<code>[</code> <code>]</code> 切小节，<code>1</code> <code>2</code> <code>3</code> 切 tab。</p>
+        <p data-lang="en-US" hidden>Open a chapter, pick a section on the left, switch <b>Explain / Key Code / Demo</b> on top — you can drag the demo parameters live while lecturing. Shortcuts: <code>[</code> <code>]</code> for sections, <code>1</code> <code>2</code> <code>3</code> for tabs.</p>
+      </div>
+      <div class="howto-card">
+        <h3 data-lang="zh-CN">📖 学生自学</h3>
+        <h3 data-lang="en-US" hidden>📖 Self study</h3>
+        <p data-lang="zh-CN">每节的讲解 tab 都按「案例症状 → 理论依据 → 浏览器规则」推进；关键代码 tab 的 ⭐ 行就是必须记住的那几行，下面配「为什么这么写」与「有什么坑」。</p>
+        <p data-lang="en-US" hidden>The Explain tab always moves from case symptom → theoretical basis → browser rule. The ⭐ lines in Key Code are the ones to remember, each followed by "why write it this way" and "what breaks otherwise".</p>
+      </div>
+      <div class="howto-card">
+        <h3 data-lang="zh-CN">🔬 演示即实验</h3>
+        <h3 data-lang="en-US" hidden>🔬 Demos as experiments</h3>
+        <p data-lang="zh-CN">演示不是录屏，而是可操作的沙盒：调参、拖拽、注入超长文案做破坏性测试，并且实时显示浏览器的真实计算值（计算宽度、是否溢出、对齐偏差）。</p>
+        <p data-lang="en-US" hidden>Demos are not screencasts but operable sandboxes: tune parameters, drag things, inject absurdly long text to stress-test, and watch the browser’s real computed values (widths, overflow, alignment drift).</p>
+      </div>
+      <div class="howto-card">
+        <h3 data-lang="zh-CN">🌐 中英双语</h3>
+        <h3 data-lang="en-US" hidden>🌐 Bilingual</h3>
+        <p data-lang="zh-CN">右上角切换语言，或加 <code>?lang=en</code> 直达英文。两种语言来自同一份结构化内容，因此内容严格一致（含代码注释）。</p>
+        <p data-lang="en-US" hidden>Switch languages at the top right, or append <code>?lang=en</code>. Both languages are generated from the same structured source, so they stay strictly consistent — including code comments.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <h2 data-lang="zh-CN">ℹ️ 关于本课程</h2>
+    <h2 data-lang="en-US" hidden>ℹ️ About This Course</h2>
+    <div class="about">
+      
+      <div class="about-item">
+        <h4 data-lang="zh-CN">🧠 理论来源</h4>
+        <h4 data-lang="en-US" hidden>🧠 Sources</h4>
+        <p data-lang="zh-CN">格式塔知觉组织原则（Wertheimer 1923）· Robin Williams《写给大家看的设计书》CRAP 四原则 · Müller-Brockmann《Grid Systems in Graphic Design》· WCAG 2.2（1.4.10 Reflow / 1.4.4 Resize Text / 2.4.3 Focus Order）· Jen Simmons「内在布局」· Heydon Pickering & Andy Bell《Every Layout》· MDN 与 CSS 规范中关于格式化上下文、弹性盒与网格的定义。</p>
+        <p data-lang="en-US" hidden>Gestalt principles of perceptual organisation (Wertheimer 1923) · Robin Williams, <i>The Non-Designer’s Design Book</i> (CRAP) · Müller-Brockmann, <i>Grid Systems in Graphic Design</i> · WCAG 2.2 (1.4.10 Reflow, 1.4.4 Resize Text, 2.4.3 Focus Order) · Jen Simmons on intrinsic layout · Heydon Pickering & Andy Bell, <i>Every Layout</i> · MDN and the CSS specifications on formatting contexts, flexbox and grid.</p>
+      </div>
+      <div class="about-item">
+        <h4 data-lang="zh-CN">🎯 设计原则</h4>
+        <h4 data-lang="en-US" hidden>🎯 Design principles</h4>
+        <p data-lang="zh-CN"><b>案例为中心，不是语法为中心</b>。不单独罗列 API，而是每个知识点都回答一个问题：案例里的这个症状，用哪条浏览器规则来解决？为什么要这么做？不做会怎样？</p>
+        <p data-lang="en-US" hidden><b>Case-first, not syntax-first.</b> No API dumps: every concept answers one question — which browser rule fixes this symptom in the case, why this way, and what happens otherwise.</p>
+      </div>
+      <div class="about-item">
+        <h4 data-lang="zh-CN">🛠️ 技术栈</h4>
+        <h4 data-lang="en-US" hidden>🛠️ Tech stack</h4>
+        <p data-lang="zh-CN">纯 HTML + CSS + 原生 ES Modules，<b>零运行时依赖</b>；内容写在结构化 JS 里，<code>node build.mjs</code> 生成 <code>docs/</code> 静态站点。演示全部是原生 DOM 操作，没有任何图表库。</p>
+        <p data-lang="en-US" hidden>Plain HTML + CSS + native ES modules with <b>zero runtime dependencies</b>. Content lives in structured JS and <code>node build.mjs</code> emits the static site into <code>docs/</code>. Demos are pure DOM code — no charting or UI library.</p>
+      </div>
+      <div class="about-item">
+        <h4 data-lang="zh-CN">📦 如何发布</h4>
+        <h4 data-lang="en-US" hidden>📦 How to publish</h4>
+        <p data-lang="zh-CN">把仓库推到 GitHub，在 Settings → Pages 里选择 <code>main</code> 分支的 <code>/docs</code> 目录即可得到 <code>https://&lt;用户名&gt;.github.io/&lt;仓库名&gt;/</code>；也可以直接用附带的 GitHub Actions 工作流自动发布。</p>
+        <p data-lang="en-US" hidden>Push the repo to GitHub, then in Settings → Pages pick the <code>/docs</code> folder on <code>main</code> to get <code>https://&lt;user&gt;.github.io/&lt;repo&gt;/</code>. An included GitHub Actions workflow can also publish automatically.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p data-i18n="footer.copy"></p>
+</footer>
+
+<script type="module" src="./assets/lang.js"></script>
+</body>
+</html>

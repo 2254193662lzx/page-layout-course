@@ -1,0 +1,24 @@
+{
+  "name": "page-layout-course",
+  "version": "1.0.0",
+  "private": true,
+  "description": "《页面布局之道》· 中英双语交互教学网站（How to do page layout: bilingual interactive course）",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:partial": "node build.mjs",
+    "serve": "python -m http.server 8080 --directory docs",
+    "watch": "node --watch build.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "page-layout",
+    "css",
+    "teaching",
+    "bilingual",
+    "github-pages"
+  ],
+  "license": "MIT"
+}

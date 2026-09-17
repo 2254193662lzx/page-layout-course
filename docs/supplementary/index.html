@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="《页面布局之道》—— 中英双语交互教学网站：讲解 / 关键代码 / 动态演示三合一的页面布局课程" />
+<title>演示索引 · Demo Index · 《页面布局之道》</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../assets/styles.css" />
+<link rel="stylesheet" href="../assets/lesson.css" />
+</head>
+<body>
+<div class="lang-switch lang-switch-floating" role="group" data-i18n-aria="nav.lang.label"></div>
+<header class="lesson-header" style="padding-top:64px">
+  <div>
+    <h1 data-lang="zh-CN">🎛️ 全部 18 个交互演示</h1>
+    <h1 data-lang="en-US" hidden>🎛️ All 18 Interactive Demos</h1>
+    <p class="subtitle" data-lang="zh-CN">每个演示都直接打开对应小节的「演示」tab。所有演示均为纯前端原生 JS，可离线运行。</p>
+    <p class="subtitle" data-lang="en-US" hidden>Each link opens the Demo tab of its section. All demos are vanilla JS, fully offline.</p>
+  </div>
+  <a class="btn" href="../" data-i18n="common.portal"></a>
+</header>
+<main class="section" style="padding-top:0">
+  <div class="cards">
+
+      <a class="card" href="../lesson-01/?tab=demo#ch-1-1">
+        <div class="card-num" data-lang="zh-CN">1.1 · lesson-01</div>
+        <div class="card-num" data-lang="en-US" hidden>1.1 · lesson-01</div>
+        <h3 data-lang="zh-CN">布局决定「能不能被读懂」</h3>
+        <h3 data-lang="en-US" hidden>Layout decides whether the page can be read</h3>
+        <p class="card-desc" data-lang="zh-CN">拖动分割线对比 v1 / v2；点击页面上的 ① ② 病灶标记查看诊断；也可以单独开关"层次修复"与"间距修复"，看层次评分如何变化。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the divider to compare v1 / v2. Click the ① ② markers on the page to read each diagnosis, or toggle the hierarchy and spacing fixes separately and watch the score change.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-1-1 →</span><span data-lang="en-US" hidden>Open demo d-1-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-01/?tab=demo#ch-1-2">
+        <div class="card-num" data-lang="zh-CN">1.2 · lesson-01</div>
+        <div class="card-num" data-lang="en-US" hidden>1.2 · lesson-01</div>
+        <h3 data-lang="zh-CN">视觉层次的四个杠杆</h3>
+        <h3 data-lang="en-US" hidden>The four levers of visual hierarchy</h3>
+        <p class="card-desc" data-lang="zh-CN">四个滑杆分别对应尺寸/间距/对比/对齐四个杠杆，实时渲染同一组课程卡片；右侧显示"层次评分"、首屏焦点顺序与对齐线数量。把滑杆全拉到最低，就得到 CourseHub v1 的效果。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Four sliders drive size / space / contrast / alignment on the same set of course cards in real time. The panel shows a hierarchy score, the first-glance focus order and the number of alignment lines. Drag everything to the minimum to reproduce CourseHub v1.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-1-2 →</span><span data-lang="en-US" hidden>Open demo d-1-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-01/?tab=demo#ch-1-3">
+        <div class="card-num" data-lang="zh-CN">1.3 · lesson-01</div>
+        <div class="card-num" data-lang="en-US" hidden>1.3 · lesson-01</div>
+        <h3 data-lang="zh-CN">用系统而不是手感：8pt 网格与纵向节奏</h3>
+        <h3 data-lang="en-US" hidden>Systems, not vibes: the 8pt grid and vertical rhythm</h3>
+        <p class="card-desc" data-lang="zh-CN">切换 4pt / 8pt / "手感"三套间距方案，叠加基线网格图层，实时统计每个元素的对齐误差（px）与误差分布直方图；点击"对齐漂移"按钮可以让误差动画呈现在页面上。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Switch between the 4pt, 8pt and "by feel" spacing schemes, overlay the baseline grid, and read each element’s alignment error in pixels with a histogram. Hit "alignment drift" to animate the error on the page.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-1-3 →</span><span data-lang="en-US" hidden>Open demo d-1-3 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-02/?tab=demo#ch-2-1">
+        <div class="card-num" data-lang="zh-CN">2.1 · lesson-02</div>
+        <div class="card-num" data-lang="en-US" hidden>2.1 · lesson-02</div>
+        <h3 data-lang="zh-CN">正常流：浏览器默认的布局算法</h3>
+        <h3 data-lang="en-US" hidden>Normal flow: the browser’s default layout algorithm</h3>
+        <p class="card-desc" data-lang="zh-CN">切换 display 值与 overflow，观察父元素高度塌陷、BFC 边界（蓝色虚线）与浮动子元素的关系；打开"注入超长内容"看哪种写法会溢出。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Switch display and overflow values and watch parent collapse, the BFC boundary (blue dashed) and the floated child. Turn on "inject long content" to see which variant overflows.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-2-1 →</span><span data-lang="en-US" hidden>Open demo d-2-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-02/?tab=demo#ch-2-2">
+        <div class="card-num" data-lang="zh-CN">2.2 · lesson-02</div>
+        <div class="card-num" data-lang="en-US" hidden>2.2 · lesson-02</div>
+        <h3 data-lang="zh-CN">盒模型与外边距折叠</h3>
+        <h3 data-lang="en-US" hidden>The box model and margin collapsing</h3>
+        <p class="card-desc" data-lang="zh-CN">拖动 width / padding / border / margin 四个滑杆，实时看到盒模型四层结构与"实际占用尺寸"的计算式；切换 box-sizing 对比 300px + padding 的真实结果；下方用动画演示两个 margin 如何"折叠"成一个。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the width, padding, border and margin sliders to see the four layers and the live arithmetic of the real footprint. Switch box-sizing to compare 300px + padding, and watch the animation of two margins collapsing into one.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-2-2 →</span><span data-lang="en-US" hidden>Open demo d-2-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-02/?tab=demo#ch-2-3">
+        <div class="card-num" data-lang="zh-CN">2.3 · lesson-02</div>
+        <div class="card-num" data-lang="en-US" hidden>2.3 · lesson-02</div>
+        <h3 data-lang="zh-CN">脱离文档流：定位、层叠与粘性</h3>
+        <h3 data-lang="en-US" hidden>Leaving the flow: positioning, stacking and sticky</h3>
+        <p class="card-desc" data-lang="zh-CN">四种让 sticky 失效的经典场景，一个一个复现再修好；点"自动滚动测试"会真实滚动容器并测量导航是否吸顶；右侧显示层叠顺序与当前生效的定位规则。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Four classic ways to break sticky, each reproducible and fixable. "Run scroll test" actually scrolls the container and measures whether the header pinned. The panel shows the paint order and which positioning rules are in effect.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-2-3 →</span><span data-lang="en-US" hidden>Open demo d-2-3 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-03/?tab=demo#ch-3-1">
+        <div class="card-num" data-lang="zh-CN">3.1 · lesson-03</div>
+        <div class="card-num" data-lang="en-US" hidden>3.1 · lesson-03</div>
+        <h3 data-lang="zh-CN">主轴与交叉轴：一个可以旋转的坐标系</h3>
+        <h3 data-lang="en-US" hidden>Main and cross axis: a coordinate system that rotates</h3>
+        <p class="card-desc" data-lang="zh-CN">交互切换 flex-direction / wrap / justify-content / align-items，右侧实时画出主轴（蓝色箭头）与交叉轴，并显示每个项目的实际位置与尺寸；点"截断文案"可以看容器变窄时元素的收缩行为。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Toggle flex-direction, wrap, justify-content and align-items; the stage draws the main axis (blue arrow) and cross axis live, with each item’s real position and size. Use "cut the copy" to watch how items shrink as the container narrows.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-3-1 →</span><span data-lang="en-US" hidden>Open demo d-3-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-03/?tab=demo#ch-3-2">
+        <div class="card-num" data-lang="zh-CN">3.2 · lesson-03</div>
+        <div class="card-num" data-lang="en-US" hidden>3.2 · lesson-03</div>
+        <h3 data-lang="zh-CN">空间分配：grow / shrink / basis 与溢出陷阱</h3>
+        <h3 data-lang="en-US" hidden>Space distribution: grow, shrink, basis and the overflow trap</h3>
+        <p class="card-desc" data-lang="zh-CN">拖动容器宽度滑杆，调整每个项目的 flex-grow / flex-shrink / flex-basis，右侧显示"剩余空间 → 每项分到多少"的完整计算过程；打开"注入长单词"和 min-width: 0 开关，看溢出如何发生与被修复。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the container width and adjust each item’s flex-grow, flex-shrink and flex-basis; the panel shows the full arithmetic from free space to each item’s final width. Toggle "inject a long word" and min-width: 0 to see the overflow appear and get fixed.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-3-2 →</span><span data-lang="en-US" hidden>Open demo d-3-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-03/?tab=demo#ch-3-3">
+        <div class="card-num" data-lang="zh-CN">3.3 · lesson-03</div>
+        <div class="card-num" data-lang="en-US" hidden>3.3 · lesson-03</div>
+        <h3 data-lang="zh-CN">四个经典模板与破坏性测试</h3>
+        <h3 data-lang="en-US" hidden>Four classic templates and a stress test</h3>
+        <p class="card-desc" data-lang="zh-CN">四个模板一键切换，然后按下"破坏按钮"：注入超长文案、30 字符长单词、2000px 宽图片、压到 320px、放大字号到 200%。每组测试都会实测并报告"是否溢出 / 是否仍然对齐"，最后给出该模板的健壮性评分。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Switch between the four templates, then hit the "break it" buttons: long copy, a 30-character word, a 2000px image, a 320px container and 200% text. Each test measures and reports whether the template overflows or stays aligned, and scores its robustness.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-3-3 →</span><span data-lang="en-US" hidden>Open demo d-3-3 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-04/?tab=demo#ch-4-1">
+        <div class="card-num" data-lang="zh-CN">4.1 · lesson-04</div>
+        <div class="card-num" data-lang="en-US" hidden>4.1 · lesson-04</div>
+        <h3 data-lang="zh-CN">从瑞士网格到 CSS Grid</h3>
+        <h3 data-lang="en-US" hidden>From the Swiss grid to CSS grid</h3>
+        <p class="card-desc" data-lang="zh-CN">叠加 12 栏网格与水槽叠层，拖动内容块让它吸附到轨道上，实时显示"偏移了多少 px、跨了几栏"；打开"用 padding 假装网格"对比 v1 的对齐误差。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Overlay the 12-column grid and gutters, drag blocks so they snap to tracks, and read how many pixels off and how many columns they span. Toggle "fake grid with padding" to compare the v1 alignment error.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-4-1 →</span><span data-lang="en-US" hidden>Open demo d-4-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-04/?tab=demo#ch-4-2">
+        <div class="card-num" data-lang="zh-CN">4.2 · lesson-04</div>
+        <div class="card-num" data-lang="en-US" hidden>4.2 · lesson-04</div>
+        <h3 data-lang="zh-CN">轨道、fr 与内在尺寸</h3>
+        <h3 data-lang="en-US" hidden>Tracks, fr and intrinsic sizing</h3>
+        <p class="card-desc" data-lang="zh-CN">拖动容器宽度与 minmax 上下限，实时看列数变化与每个轨道的计算宽度；切换 auto-fit / auto-fill 看最后一行是否被"折叠"；打开"跨两列"看它在窄容器下如何溢出与修复。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the container width and the minmax bounds to watch the column count and each track’s computed width. Toggle auto-fit / auto-fill to see whether the last row collapses, and enable "span 2" to watch it overflow on narrow containers and get fixed.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-4-2 →</span><span data-lang="en-US" hidden>Open demo d-4-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-04/?tab=demo#ch-4-3">
+        <div class="card-num" data-lang="zh-CN">4.3 · lesson-04</div>
+        <div class="card-num" data-lang="en-US" hidden>4.3 · lesson-04</div>
+        <h3 data-lang="zh-CN">用 grid-template-areas 做布局迁移</h3>
+        <h3 data-lang="en-US" hidden>Layout migration with grid-template-areas</h3>
+        <p class="card-desc" data-lang="zh-CN">在文本框里直接编辑 grid-template-areas，实时校验"是否都是矩形 / 列数是否匹配"并给出报错；切换手机、平板、桌面三档预览；还可以拖动区域名重排布局。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Edit grid-template-areas in the text box: it validates rectangles and column counts live and reports errors. Switch between phone, tablet and desktop previews, or drag region names to rearrange the layout.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-4-3 →</span><span data-lang="en-US" hidden>Open demo d-4-3 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-05/?tab=demo#ch-5-1">
+        <div class="card-num" data-lang="zh-CN">5.1 · lesson-05</div>
+        <div class="card-num" data-lang="en-US" hidden>5.1 · lesson-05</div>
+        <h3 data-lang="zh-CN">断点由内容决定，而不是由设备决定</h3>
+        <h3 data-lang="en-US" hidden>Breakpoints follow the content, not the device</h3>
+        <p class="card-desc" data-lang="zh-CN">拖动宽度滑杆（320 → 1440），实时检测四类"内容失败"：横向溢出、行长过长、元素被压到不可读、点击目标过小。点"扫描全部宽度"会自动跑完整个区间，给出事故清单与断点建议。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the width slider from 320 to 1440 and watch four kinds of content failure being detected: horizontal overflow, over-long lines, elements squeezed past legibility, and undersized tap targets. "Scan all widths" runs the whole range and returns a failure list with breakpoint suggestions.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-5-1 →</span><span data-lang="en-US" hidden>Open demo d-5-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-05/?tab=demo#ch-5-2">
+        <div class="card-num" data-lang="zh-CN">5.2 · lesson-05</div>
+        <div class="card-num" data-lang="en-US" hidden>5.2 · lesson-05</div>
+        <h3 data-lang="zh-CN">容器查询：让组件自己决定</h3>
+        <h3 data-lang="en-US" hidden>Container queries: let the component decide</h3>
+        <p class="card-desc" data-lang="zh-CN">同一个卡片组件放进三个不同宽度的容器，切换"媒体查询版 / 容器查询版"，观察只有容器查询版会让每个容器内的卡片各自变形；拖动容器右边缘改变宽度，实时读每个卡片的 flex-direction 与封面宽度。</p>
+        <p class="card-desc" data-lang="en-US" hidden>The same card component is placed in three containers of different widths. Switch between the media-query and container-query versions: only the latter reshapes each card per container. Drag a container edge to resize it and read each card’s flex-direction and cover width live.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-5-2 →</span><span data-lang="en-US" hidden>Open demo d-5-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-05/?tab=demo#ch-5-3">
+        <div class="card-num" data-lang="zh-CN">5.3 · lesson-05</div>
+        <div class="card-num" data-lang="en-US" hidden>5.3 · lesson-05</div>
+        <h3 data-lang="zh-CN">内在布局与流式排版</h3>
+        <h3 data-lang="en-US" hidden>Intrinsic layout and fluid typography</h3>
+        <p class="card-desc" data-lang="zh-CN">左上是 clamp() 生成器：调最小/中间/最大三个值，实时看到当前宽度下的实际字号，并生成可复制的代码；下方是 Switcher 原语实验台，拖动容器宽度看它如何在阈值处"无断点"地横竖切换，并可注入 320px、200% 字号、长单词做压力测试。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Top left is a clamp() generator: tune the min, preferred and max values, read the actual font size at the current width, and copy the generated code. Below is the Switcher primitive lab: drag the container width to watch it flip between row and column with no breakpoint, and stress it with 320px, 200% text and a long word.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-5-3 →</span><span data-lang="en-US" hidden>Open demo d-5-3 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-06/?tab=demo#ch-6-1">
+        <div class="card-num" data-lang="zh-CN">6.1 · lesson-06</div>
+        <div class="card-num" data-lang="en-US" hidden>6.1 · lesson-06</div>
+        <h3 data-lang="zh-CN">阅读顺序 vs 视觉顺序</h3>
+        <h3 data-lang="en-US" hidden>Reading order versus visual order</h3>
+        <p class="card-desc" data-lang="zh-CN">切换"用 order 强改顺序"与"用 grid 重排"，实时对比三套顺序（DOM 顺序 / 视觉顺序 / 焦点顺序）；点"播放 Tab 顺序"会真的依次聚焦每个元素，看焦点是否与视觉顺序一致。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Switch between "reorder with order" and "reorder with grid" and compare three orders live: DOM order, visual order and focus order. "Play tab order" really focuses each element in turn so you can see whether focus follows what you see.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-6-1 →</span><span data-lang="en-US" hidden>Open demo d-6-1 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-06/?tab=demo#ch-6-2">
+        <div class="card-num" data-lang="zh-CN">6.2 · lesson-06</div>
+        <div class="card-num" data-lang="en-US" hidden>6.2 · lesson-06</div>
+        <h3 data-lang="zh-CN">缩放、重排与可访问性的硬指标</h3>
+        <h3 data-lang="en-US" hidden>Zoom, reflow and the hard accessibility criteria</h3>
+        <p class="card-desc" data-lang="zh-CN">一键施加四种可访问性压力（320px 重排 / 200% 字号 / 文本间距增强 / 高对比度），自动检测横向溢出、内容截断、点击目标过小与对比度不足，并给出 WCAG 条目号与修复建议。切换"组件测试 / 整页测试"模式看两者差别。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Apply four accessibility stresses in one click (320px reflow, 200% text, enhanced text spacing, high contrast) and get automatic detection of horizontal overflow, clipped content, undersized targets and low contrast — each labelled with its WCAG criterion and a suggested fix. Switch between component and whole-page test modes to see the difference.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-6-2 →</span><span data-lang="en-US" hidden>Open demo d-6-2 →</span></div>
+      </a>
+
+      <a class="card" href="../lesson-06/?tab=demo#ch-6-3">
+        <div class="card-num" data-lang="zh-CN">6.3 · lesson-06</div>
+        <div class="card-num" data-lang="en-US" hidden>6.3 · lesson-06</div>
+        <h3 data-lang="zh-CN">综合案例：CourseHub 从 v1 到 v2</h3>
+        <h3 data-lang="en-US" hidden>The full case: CourseHub from v1 to v2</h3>
+        <p class="card-desc" data-lang="zh-CN">拖拽分割线对比 CourseHub v1 / v2（同一份 HTML，只有 CSS 不同）；点击 8 个病灶可跳到对应章节；下方是可交互的布局评审清单，勾选后实时给出分数与"还差哪几项"的提示。</p>
+        <p class="card-desc" data-lang="en-US" hidden>Drag the divider to compare CourseHub v1 and v2 (same HTML, different CSS). Click any of the eight defects to jump to its chapter. Below is an interactive review checklist that scores as you tick, telling you what is still missing.</p>
+        <div class="card-cta"><span data-lang="zh-CN">打开演示 d-6-3 →</span><span data-lang="en-US" hidden>Open demo d-6-3 →</span></div>
+      </a>
+  </div>
+</main>
+<footer><p data-i18n="footer.copy"></p></footer>
+<script type="module" src="../assets/lang.js"></script>
+</body>
+</html>

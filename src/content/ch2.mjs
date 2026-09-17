@@ -1,0 +1,480 @@
+/* =============================================================
+ * 第 2 章 · 文档流与盒模型 / Ch 2 · Flow & The Box Model
+ * 案例病灶：③ 用绝对定位摆盒子
+ * ============================================================= */
+
+export default {
+  id: 2,
+  slug: 'lesson-02',
+  num: { zh: '第 2 章', en: 'Chapter 2' },
+  title: { zh: '文档流与盒模型：布局的物理定律', en: 'Flow and the box model: the physics of layout' },
+  subtitle: {
+    zh: '在动 Flexbox 和 Grid 之前，先把浏览器默认的布局算法搞清楚。绝大多数"莫名其妙"的布局 bug，都是因为违反了文档流的规则。',
+    en: 'Before reaching for flexbox and grid, understand the layout algorithm the browser runs by default. Most "inexplicable" layout bugs come from breaking the rules of normal flow.'
+  },
+  lede: {
+    zh: '正常流、格式化上下文、包含块、外边距折叠、层叠上下文 —— 以及为什么用 <code>position:absolute</code> 摆出来的页面在真实内容面前必然崩坏。',
+    en: 'Normal flow, formatting contexts, containing blocks, margin collapsing, stacking contexts — and why a page positioned with <code>position:absolute</code> is guaranteed to break once real content arrives.'
+  },
+  tags: [
+    { zh: '正常流', en: 'Normal flow' },
+    { zh: '格式化上下文', en: 'Formatting context' },
+    { zh: '盒模型', en: 'Box model' },
+    { zh: '外边距折叠', en: 'Margin collapsing' },
+    { zh: '层叠上下文', en: 'Stacking context' },
+    { zh: 'position: sticky', en: 'position: sticky' }
+  ],
+  caseNote: {
+    zh: '本章诊断案例的 <b>③ 用绝对定位摆盒子</b>：CourseHub v1 的 header 用 <code>position:absolute</code> 钉在 120px 高度上，课程标题一旦超过两行就会压住下面的内容。',
+    en: 'This chapter diagnoses defect <b>③ absolute positioning</b>: the v1 header is pinned with <code>position:absolute</code> at a fixed 120px height, so a course title longer than two lines overlaps everything below it.'
+  },
+
+  sections: [
+    /* =========================================================
+     * 2.1
+     * ======================================================= */
+    {
+      id: 'ch-2-1',
+      num: '2.1',
+      title: { zh: '正常流：浏览器默认的布局算法', en: 'Normal flow: the browser’s default layout algorithm' },
+      subtitle: {
+        zh: '在不写任何布局代码的情况下，浏览器已经在排版了。理解它在做什么，才知道什么时候需要干预。',
+        en: 'Even with zero layout CSS, the browser is already laying things out. Understand what it is doing before you intervene.'
+      },
+      explain: [
+        { p: {
+          zh: '打开一个只有 HTML 的页面，你看到的结果不是"没有样式"，而是<b>正常流（normal flow）</b>的结果：块级盒子从上到下依次堆叠，行内盒子从左到右排列并在行尾换行。这一套默认算法有三个关键性质，决定了后面所有布局手段的边界。',
+          en: 'Open a page with HTML only and what you see is not "no styles" but the result of <b>normal flow</b>: block-level boxes stack top to bottom, inline boxes run left to right and wrap at the end of a line. This default algorithm has three properties that define the limits of every technique that follows.'
+        } },
+        { h: { zh: '性质一：高度由内容决定（content-driven height）', en: 'Property 1: height is content-driven' } },
+        { p: {
+          zh: '块级盒子的高度默认是 <code>auto</code>，含义是"容纳内容所需的高度"。这是文档流最重要的优点：<b>你不需要知道内容有多长</b>。文字变多、语言换成德语（词更长）、用户放大字号，盒子都会自己长大。<br />反过来，任何"把高度写死"的做法都在和这个性质对抗——这就是第 ③ 号病灶的根源：<code>height: 120px</code> 一旦遇上三行标题，内容就会溢出或重叠。',
+          en: 'A block box’s height defaults to <code>auto</code>, meaning "whatever the content needs". This is normal flow’s most valuable property: <b>you do not need to know how long the content is</b>. More text, a longer language (German!), a user zooming in — the box grows by itself. Conversely, any hard-coded height fights this property, which is exactly the root of defect ③: a <code>height: 120px</code> header meets a three-line title and the content overflows or overlaps.'
+        } },
+        { h: { zh: '性质二：宽度默认撑满，但可以收缩到 min-content', en: 'Property 2: width fills the container, and can shrink to min-content' } },
+        { p: {
+          zh: '块级盒子的宽度默认 <code>auto</code> = 包含块宽度。所以"页面宽度"这件事在正常流里是自动的：只要祖先链没有溢出，子元素不会横向跑出去。这也是为什么<b>能用正常流解决的布局，不要用绝对定位</b>——绝对定位的盒子脱离这条约束，宽度收缩到内容宽，于是长标题会溢出容器。',
+          en: 'A block box’s width defaults to <code>auto</code> = the containing block’s width. So "page width" is automatic in normal flow: as long as no ancestor overflows, children cannot run off horizontally. This is why <b>anything normal flow can do should not be done with absolute positioning</b> — an absolutely positioned box leaves that constraint, shrinks to its content width, and long titles then overflow it.'
+        } },
+        { h: { zh: '性质三：格式化上下文决定"谁和谁一起排版"', en: 'Property 3: formatting contexts decide who lays out with whom' } },
+        { p: {
+          zh: '正常流内部并不是一种排版方式，而是若干种<b>格式化上下文</b>（formatting context）的组合：块级格式化上下文（BFC）负责竖着堆，行内格式化上下文（IFC）负责横着排。<code>display</code> 的值就是在切换上下文的类型。',
+          en: 'Normal flow is not one algorithm but a combination of <b>formatting contexts</b>: the block formatting context (BFC) stacks vertically, the inline formatting context (IFC) flows horizontally. Changing <code>display</code> is really switching which context applies.'
+        } },
+        { table: {
+          head: [{ zh: 'display 值', en: 'display value' }, { zh: '作用', en: 'Effect' }, { zh: '典型用途', en: 'Typical use' }],
+          rows: [
+            [{ zh: '<code>block</code>', en: '<code>block</code>' }, { zh: '独占一行，可设宽高', en: 'Owns a line; accepts width/height' }, { zh: '卡片、区块、段落', en: 'Cards, sections, paragraphs' }],
+            [{ zh: '<code>inline</code>', en: '<code>inline</code>' }, { zh: '随文字流动，宽高无效', en: 'Flows with text; width/height ignored' }, { zh: '文内链接、强调', en: 'Inline links, emphasis' }],
+            [{ zh: '<code>inline-block</code>', en: '<code>inline-block</code>' }, { zh: '随文字流动，但接受宽高', en: 'Flows with text yet accepts width/height' }, { zh: '标签、按钮（现代写法多用 flex）', en: 'Tags, buttons (modern code prefers flex)' }],
+            [{ zh: '<code>flow-root</code>', en: '<code>flow-root</code>' }, { zh: '创建新的 BFC，且不改变外部行为', en: 'Creates a new BFC without changing outside behaviour' }, { zh: '<b>清除浮动的首选写法</b>', en: '<b>The preferred float-clearing idiom</b>' }],
+            [{ zh: '<code>flex</code> / <code>grid</code>', en: '<code>flex</code> / <code>grid</code>' }, { zh: '创建弹性/网格格式化上下文', en: 'Creates a flex/grid formatting context' }, { zh: '一维 / 二维布局', en: 'One- / two-dimensional layout' }]
+          ]
+        } },
+        { theory: {
+          zh: '<b>什么是 BFC，为什么它能"兜住"浮动元素？</b>BFC 是一个独立的排版区域：区域内部元素的排布不影响外部，外部的浮动也不会侵入内部。所以给父元素一个 <code>display: flow-root</code>，父元素就会把内部浮动子元素的高度计入自身高度——这就是清除浮动（clearfix）的原理。历史上人们用 <code>overflow: hidden</code> 达到同样效果，但它有副作用（会裁掉阴影、影响 sticky），所以现代写法是 <code>flow-root</code>。',
+          en: '<b>What is a BFC and why does it "contain" floats?</b> A BFC is an independent layout region: what happens inside does not affect the outside, and outside floats cannot intrude. Giving a parent <code>display: flow-root</code> therefore makes it count the height of its floated children. That is the mechanism behind the classic clearfix. Historically people used <code>overflow: hidden</code> for the same effect, but it has side effects (it clips shadows and breaks <code>sticky</code>), so the modern idiom is <code>flow-root</code>.',
+          cite: {
+            zh: 'CSS 2.1 §9.4.1「Block formatting contexts」；MDN「Block formatting context」',
+            en: 'CSS 2.1 §9.4.1 "Block formatting contexts"; MDN "Block formatting context"'
+          }
+        } },
+        { case: {
+          title: { zh: '案例诊断：绝对定位让页面失去"自适应"能力', en: 'Case diagnosis: absolute positioning kills adaptivity' },
+          zh: 'v1 的 header：<code>position:absolute; top:0; height:120px; width:100%</code>，主体内容 <code>margin-top:120px</code>。<b>三处违反文档流</b>：①高度写死，标题三行时被裁掉；②宽度 100% 是相对"包含块"（最近的定位祖先）算的，一旦祖先不是全宽，header 就会短一截；③主体靠 <code>margin-top:120px</code> 手工对齐，header 一改高度就得同步改——<b>两份信息描述同一件事，必然不同步</b>。正确做法是把 header 放回正常流。',
+          en: 'The v1 header uses <code>position:absolute; top:0; height:120px; width:100%</code> with the body pushed down by <code>margin-top:120px</code>. <b>Three violations of normal flow</b>: (1) a hard-coded height clips a three-line title; (2) <code>width:100%</code> resolves against the containing block — the nearest positioned ancestor — so it under-shoots as soon as that ancestor is not full width; (3) the body is aligned by hand with <code>margin-top:120px</code>, so every header change requires a matching manual edit. <b>Two sources of truth for one fact will always drift.</b> The fix is to put the header back into normal flow.'
+        } }
+      ],
+      code: [
+        {
+          title: { zh: '关键代码 ① 用 flow-root 建立独立的排版区域', en: 'Key code ① Create an independent layout region with flow-root' },
+          purpose: {
+            zh: '父元素高度塌陷的经典原因：子元素浮动后脱离正常流，父元素"看不见"它。',
+            en: 'The classic cause of a collapsed parent: once a child floats it leaves normal flow, and the parent can no longer see it.'
+          },
+          lang: 'css',
+          code: {
+            zh: `.media {
+  /* ⭐ 关键点 ①：flow-root = "为一个新 BFC，但不要改变我这个元素自身的行为"
+     对比 overflow:hidden：后者会裁掉阴影、破坏 sticky、影响滚动 */
+  display: flow-root;
+}
+
+.media__cover { float: inline-start; margin-inline-end: var(--space-4); }
+
+/* ❌ 老式写法的问题：
+   .media { overflow: hidden; }   裁掉溢出的阴影/徽标
+   .media::after { content:""; display:table; clear:both; }  —— 多余的空节点 */
+
+/* ⭐ 关键点 ②：让"包含块"显式化 —— 需要定位参照时才加 position:relative */
+.media { position: relative; }   /* 只有内部要放绝对定位元素时才需要 */`,
+            en: `.media {
+  /* ⭐ Key point ①: flow-root = "start a new BFC, but do not change my own outside behaviour"
+     compare overflow:hidden: it clips shadows, breaks sticky and affects scrolling */
+  display: flow-root;
+}
+
+.media__cover { float: inline-start; margin-inline-end: var(--space-4); }
+
+/* ❌ why the legacy idiom is worse:
+   .media { overflow: hidden; }   clips overflowing shadows and badges
+   .media::after { content:""; display:table; clear:both; }  — an extra empty node */
+
+/* ⭐ Key point ②: make the containing block explicit — add position:relative only when needed */
+.media { position: relative; }   /* required only if something inside is absolutely positioned */`
+          },
+          points: {
+            zh: '<b>坑</b>：<code>position: relative</code> 不是"免费的"。它会让元素成为<b>定位包含块</b>，内部任何 <code>position:absolute</code> 子元素都改为相对它定位。所以在深层组件里随手加 <code>relative</code>，会悄悄改变内部绝对定位元素的位置——这类 bug 极难排查。原则：<b>只在确实需要作为定位参照时才加</b>，并且加上注释说明"谁在依赖它"。',
+            en: '<b>Pitfall</b>: <code>position: relative</code> is not free. It makes the element a <b>containing block for positioning</b>, so every absolutely positioned descendant now resolves against it. Sprinkling <code>relative</code> through deep components silently moves those descendants — a bug that is very hard to trace. The rule: add it <b>only when something genuinely needs it as a reference</b>, and comment which element depends on it.'
+          }
+        },
+        {
+          title: { zh: '关键代码 ② 把"写死的高度"换成"内容驱动的高度"', en: 'Key code ② Replace hard-coded height with content-driven height' },
+          purpose: {
+            zh: '这是第 ③ 号病灶的正解：让 header 的高度由它的内容决定，同时保证内部元素垂直居中。',
+            en: 'The fix for defect ③: let the header height follow its content while still centring it vertically.'
+          },
+          lang: 'css',
+          code: {
+            zh: `.site-header {
+  /* ❌ 病态：height: 120px; position: absolute; top: 0; */
+  /* ⭐ 关键点 ③：min-height 给"最小舒适高度"，height 交给内容 */
+  display: flex;
+  align-items: center;          /* 交叉轴居中：内容再高也不会顶出去 */
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 72px;             /* 只有一行时也保持手感，而不是硬性锁死 */
+  padding-block: var(--space-3);/* ⭐ 关键点 ④：改用内边距提供呼吸，高度自然生长 */
+  padding-inline: var(--space-5);
+}
+/* 不再需要 .site-main { margin-top: 120px } —— 正常流自己会接上去 */`,
+            en: `.site-header {
+  /* ❌ the defect: height: 120px; position: absolute; top: 0; */
+  /* ⭐ Key point ③: min-height gives a comfortable floor; the content owns the real height */
+  display: flex;
+  align-items: center;          /* cross-axis centring: taller content still fits */
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 72px;             /* keeps the feel for a single line without locking it */
+  padding-block: var(--space-3);/* ⭐ Key point ④: padding provides the breathing room; height grows naturally */
+  padding-inline: var(--space-5);
+}
+/* .site-main { margin-top: 120px } is no longer needed — normal flow follows automatically */`
+          },
+          points: {
+            zh: '<code>min-height</code> + <code>padding</code> 的组合是"写死高度"的通用替代方案：它同时满足两个需求——<b>视觉上的稳定</b>（不会因为一行/两行而抖动）和<b>结构上的自适应</b>（内容变多就长大）。<b>坑</b>：如果一定要用 <code>height</code>，配上 <code>overflow: auto</code> 至少不会重叠，但那是"用滚动条掩盖问题"；真正的解法是让高度可变。',
+            en: '<code>min-height</code> plus <code>padding</code> is the general replacement for a fixed height: it satisfies both needs at once — <b>visual stability</b> (no jitter between one line and two) and <b>structural adaptivity</b> (it grows with content). <b>Pitfall</b>: if you must use <code>height</code>, add <code>overflow: auto</code> so it at least does not overlap — but that hides the problem behind a scrollbar. The real fix is a height that can change.'
+          }
+        }
+      ],
+      demo: {
+        key: 'd-2-1',
+        hint: {
+          zh: '切换 display 值与 overflow，观察父元素高度塌陷、BFC 边界（蓝色虚线）与浮动子元素的关系；打开"注入超长内容"看哪种写法会溢出。',
+          en: 'Switch display and overflow values and watch parent collapse, the BFC boundary (blue dashed) and the floated child. Turn on "inject long content" to see which variant overflows.'
+        }
+      }
+    },
+
+    /* =========================================================
+     * 2.2
+     * ======================================================= */
+    {
+      id: 'ch-2-2',
+      num: '2.2',
+      title: { zh: '盒模型与外边距折叠', en: 'The box model and margin collapsing' },
+      subtitle: {
+        zh: '一个元素的实际占地由四层构成；而垂直方向的两个外边距会合并成一个——这是布局里最反直觉的规则。',
+        en: 'An element’s footprint has four layers, and two vertical margins merge into one — the most counter-intuitive rule in layout.'
+      },
+      explain: [
+        { p: {
+          zh: 'CSS 里没有一个叫"宽度"的东西，只有四个可以分别设置的层：内容（content）、内边距（padding）、边框（border）、外边距（margin）。<b>搞清楚"你写的 width 到底指哪一层的宽"</b>，能避免一多半的"算不对尺寸"问题。',
+          en: 'There is no single thing called "width" in CSS — only four layers you can set separately: content, padding, border and margin. <b>Knowing which layer your <code>width</code> refers to</b> prevents most "my numbers do not add up" problems.'
+        } },
+        { h: { zh: 'content-box 与 border-box', en: 'content-box vs border-box' } },
+        { p: {
+          zh: '默认的 <code>box-sizing: content-box</code> 表示 <code>width</code> 只算内容区：写 <code>width: 300px; padding: 20px</code>，元素实际占用 <b>340px</b>。这导致一个经典灾难：<code>width: 50%</code> 两栏再加 padding 就会超过 100%，横向滚动条出现。',
+          en: 'The default <code>box-sizing: content-box</code> means <code>width</code> covers the content area only: <code>width: 300px; padding: 20px</code> occupies <b>340px</b> in total. That produces the classic disaster: two <code>width: 50%</code> columns plus padding exceed 100% and a horizontal scrollbar appears.'
+        } },
+        { p: {
+          zh: '<code>box-sizing: border-box</code> 让 <code>width</code> 包含 padding 与 border，于是"300px 就是 300px"。业界普遍做法是全局复位：',
+          en: '<code>box-sizing: border-box</code> makes <code>width</code> include padding and border, so "300px means 300px". The industry-wide convention is a global reset:'
+        } },
+        { code: {
+          zh: `*, *::before, *::after { box-sizing: border-box; }`,
+          en: `*, *::before, *::after { box-sizing: border-box; }`,
+          lang: 'css'
+        } },
+        { h: { zh: '外边距折叠：三条规则', en: 'Margin collapsing: three rules' } },
+        { p: {
+          zh: '垂直方向上相邻的两个外边距会合并成一个，取其中<b>较大者</b>（不是相加）。三种情况：①相邻兄弟之间；②父元素与其第一个/最后一个子元素之间（没有 border/padding/内容隔开时）；③空的块级元素自身的上下外边距。',
+          en: 'Two adjacent vertical margins merge into one, taking the <b>larger</b> value — not the sum. Three cases: (1) between adjacent siblings; (2) between a parent and its first/last child when nothing (border, padding, content) separates them; (3) the top and bottom margins of an empty block.'
+        } },
+        { theory: {
+          zh: '为什么规范要这么设计？因为排版学里"段落之间的距离"本就应该是固定值，而不是"上一个段落的下边距 + 下一个段落的上边距"。如果不用折叠，你给每个 <code>&lt;p&gt;</code> 设 <code>margin: 16px 0</code>，段落之间会变成 32px，与页面其他地方的 16px 节奏冲突。折叠让<b>"段落间距"这个概念可以被一个值直接表达</b>。它的代价是：布局时"我写的 margin 去哪了"经常对不上，尤其在嵌套结构中。',
+          en: 'Why does the spec work this way? Because in typography the distance between paragraphs is a fixed value, not "previous bottom margin + next top margin". Without collapsing, <code>margin: 16px 0</code> on every <code>&lt;p&gt;</code> would put 32px between paragraphs, clashing with the 16px rhythm elsewhere. Collapsing lets <b>one value express the concept "paragraph spacing"</b>. The price is that in nested structures "where did my margin go?" is a common question.',
+          cite: {
+            zh: 'CSS 2.1 §8.3.1「Collapsing margins」',
+            en: 'CSS 2.1 §8.3.1 "Collapsing margins"'
+          }
+        } },
+        { note: {
+          zh: '<b>实用建议</b>：现代布局里最好<b>尽量避免依赖外边距折叠</b>。用 <code>gap</code> 表达组内间距、用 <code>padding</code> 或单向的 <code>margin-block-start</code> 表达组间间距，语义更清楚，也不会出现折叠带来的意外。需要精确控制时，<code>display: flex/grid</code> 的容器内部<b>根本不发生折叠</b>——这也是它们更好预测的原因之一。',
+          en: '<b>Practical advice</b>: in modern layout, avoid depending on margin collapsing. Use <code>gap</code> for within-group spacing and <code>padding</code> or one-directional <code>margin-block-start</code> for between-group spacing: the intent is clearer and collapse cannot surprise you. When you need precision, note that <b>collapsing does not happen inside</b> flex or grid containers — one more reason they are easier to reason about.'
+        } },
+        { case: {
+          title: { zh: '案例诊断：为什么"卡片间距看起来不一样"', en: 'Case diagnosis: why the card gaps look inconsistent' },
+          zh: 'v1 里给卡片写了 <code>margin-bottom: 21px</code>，给区块写了 <code>margin-top: 37px</code>。两者相遇时<b>折叠成 37px</b>，于是"卡片之间"和"区块之间"变成了同一个值——设计意图（两种不同关系）被浏览器合并成了一种。<b>修复</b>：容器改成 flex + <code>gap: 32px</code>，区块间距用 <code>padding-block</code>，两种间距各归其位，再也不会互相吞并。',
+          en: 'v1 sets <code>margin-bottom: 21px</code> on cards and <code>margin-top: 37px</code> on sections. Where they meet they <b>collapse to 37px</b>, so "between cards" and "between sections" become the same number — the design intent (two different relationships) is merged into one by the browser. <b>Fix</b>: make the container a flex container with <code>gap: 32px</code> and express section spacing with <code>padding-block</code>; each spacing then keeps its own meaning and can no longer swallow the other.'
+        } }
+      ],
+      code: [
+        {
+          title: { zh: '关键代码 ① 全局 padding 复位与尺寸可预期', en: 'Key code ① A predictable box everywhere' },
+          purpose: {
+            zh: '三行复位，让"写的宽度"等于"占的宽度"，团队里所有人对尺寸的理解一致。',
+            en: 'Three lines of reset so "the width I wrote" equals "the width it occupies" — one shared understanding across the team.'
+          },
+          lang: 'css',
+          code: {
+            zh: `/* ⭐ 关键点 ①：全局 border-box —— 宽度包含内边距与边框 */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ⭐ 关键点 ②：让图片/视频默认不撑破容器，这是"响应式的地板" */
+img, video, svg { display: block; max-width: 100%; height: auto; }
+
+.card { width: 300px; padding: var(--space-5); border: 1px solid var(--ink-200); }
+/* content-box 下实际占 300 + 48 + 2 = 350px
+   border-box 下实际占 300px，内容区 250px —— 这才是设计稿的语义 */`,
+            en: `/* ⭐ Key point ①: global border-box — width includes padding and border */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ⭐ Key point ②: images/videos cannot break their container by default — the floor of responsiveness */
+img, video, svg { display: block; max-width: 100%; height: auto; }
+
+.card { width: 300px; padding: var(--space-5); border: 1px solid var(--ink-200); }
+/* with content-box this occupies 300 + 48 + 2 = 350px
+   with border-box it occupies 300px, content area 250px — which is what the design file means */`
+          },
+          points: {
+            zh: '<code>img { display: block }</code> 这一句经常被忽略：行内图片会带来基线以下的空隙（因为行内格式化上下文要为字母下伸部留空间），于是图片下方莫名多出 4–6px 的白边。<code>max-width: 100%</code> 则是"图片不撑破容器"的必备句——注意它也意味着<b>图片会被缩小但不会被放大</b>，所以小图不会在宽屏上被拉糊。',
+            en: '<code>img { display: block }</code> is often skipped: an inline image sits on the text baseline, so the inline formatting context reserves room for descenders and you get 4–6px of mystery gap under the image. <code>max-width: 100%</code> is the must-have "images cannot break their container" line — note it also means <b>images shrink but never upscale</b>, so small images do not get stretched and blurry on wide screens.'
+          }
+        },
+        {
+          title: { zh: '关键代码 ② 用 gap 代替 margin，告别折叠', en: 'Key code ② Use gap instead of margins and forget collapsing' },
+          purpose: {
+            zh: '把"间距"从"每个元素的属性"改成"容器的属性"，间距就变得集中、可预测、不会折叠。',
+            en: 'Move spacing from "a property of each element" to "a property of the container" and it becomes centralised, predictable and collapse-free.'
+          },
+          lang: 'css',
+          code: {
+            zh: `.card-grid {
+  display: grid;
+  /* ⭐ 关键点 ③：一个 gap 同时表达"行间距"和"列间距"，且永不折叠 */
+  gap: var(--space-6);
+  /* 自适应列数：见第 4 章 */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.section + .section {
+  /* ⭐ 关键点 ④：只用单向 margin-block-start，杜绝"上下都写、结果被折叠" */
+  margin-block-start: var(--space-8);
+}
+
+/* ❌ 病态写法：上下都写 margin，间距语义被折叠吃掉
+.card { margin-bottom: 21px; }
+.section { margin-top: 37px; }   /* 结果只有 37px，还有 21px 消失了 */`,
+            en: `.card-grid {
+  display: grid;
+  /* ⭐ Key point ③: one gap expresses both row and column spacing, and never collapses */
+  gap: var(--space-6);
+  /* adaptive column count: see Chapter 4 */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.section + .section {
+  /* ⭐ Key point ④: only a one-directional margin-block-start — never both sides that then collapse */
+  margin-block-start: var(--space-8);
+}
+
+/* ❌ the broken version: margins on both sides, so the intent is eaten by collapsing
+.card { margin-bottom: 21px; }
+.section { margin-top: 37px; }   /* the result is 37px — 21px vanished */`
+          },
+          points: {
+            zh: '这条对比很值得记住：<b>同样的意图，两种写法的结果差了 21px</b>，而且第二种只在"这两个元素恰好相邻"时才出问题——换个上下文（中间插了一个元素）折叠不再发生，间距又变了。这种"依赖上下文的间距"是布局 bug 的高发区。<code>gap</code> 与单向 margin 的共同点是：<b>结果只取决于你写的那一个值</b>。',
+            en: 'Worth memorising: <b>the same intent, two implementations, 21px apart</b> — and the broken one only misbehaves when those two elements happen to be adjacent. Insert something between them and collapsing stops, so the spacing changes again. Spacing whose result depends on context is where layout bugs breed. Both <code>gap</code> and a one-directional margin share the same virtue: <b>the result depends only on the one value you wrote</b>.'
+          }
+        }
+      ],
+      demo: {
+        key: 'd-2-2',
+        hint: {
+          zh: '拖动 width / padding / border / margin 四个滑杆，实时看到盒模型四层结构与"实际占用尺寸"的计算式；切换 box-sizing 对比 300px + padding 的真实结果；下方用动画演示两个 margin 如何"折叠"成一个。',
+          en: 'Drag the width, padding, border and margin sliders to see the four layers and the live arithmetic of the real footprint. Switch box-sizing to compare 300px + padding, and watch the animation of two margins collapsing into one.'
+        }
+      }
+    },
+
+    /* =========================================================
+     * 2.3
+     * ======================================================= */
+    {
+      id: 'ch-2-3',
+      num: '2.3',
+      title: { zh: '脱离文档流：定位、层叠与粘性', en: 'Leaving the flow: positioning, stacking and sticky' },
+      subtitle: {
+        zh: '绝对定位不是"想放哪放哪"，它是在声明"这个盒子不参与排版"。理解代价，才用得对。',
+        en: 'Absolute positioning is not "put it anywhere"; it declares "this box takes no part in layout". Understand the cost before you use it.'
+      },
+      explain: [
+        { p: {
+          zh: '<code>position</code> 的五个值，本质上是在回答两个问题：<b>这个盒子还参与正常流吗？</b>以及<b>它相对谁定位？</b>',
+          en: 'The five values of <code>position</code> really answer two questions: <b>does this box still participate in normal flow?</b> and <b>what is it positioned against?</b>'
+        } },
+        { table: {
+          head: [{ zh: '值', en: 'Value' }, { zh: '是否占位', en: 'Takes space?' }, { zh: '定位参照', en: 'Positioned against' }, { zh: '典型用途', en: 'Typical use' }],
+          rows: [
+            [{ zh: '<code>static</code>', en: '<code>static</code>' }, { zh: '是', en: 'Yes' }, { zh: '不定位', en: 'Not positioned' }, { zh: '默认值', en: 'The default' }],
+            [{ zh: '<code>relative</code>', en: '<code>relative</code>' }, { zh: '是（保留原位置）', en: 'Yes (keeps its slot)' }, { zh: '自身原位置', en: 'Its own original position' }, { zh: '微调 + 当作定位参照', en: 'Nudging and acting as a positioning reference' }],
+            [{ zh: '<code>absolute</code>', en: '<code>absolute</code>' }, { zh: '<b>否</b>', en: '<b>No</b>' }, { zh: '最近的定位祖先', en: 'Nearest positioned ancestor' }, { zh: '徽标、浮层、装饰元素', en: 'Badges, overlays, decoration' }],
+            [{ zh: '<code>fixed</code>', en: '<code>fixed</code>' }, { zh: '<b>否</b>', en: '<b>No</b>' }, { zh: '视口（除非祖先有 transform）', en: 'The viewport (unless an ancestor has transform)' }, { zh: '悬浮操作、对话栏', en: 'Floating actions, chat widgets' }],
+            [{ zh: '<code>sticky</code>', en: '<code>sticky</code>' }, { zh: '是', en: 'Yes' }, { zh: '最近的滚动祖先', en: 'Nearest scrolling ancestor' }, { zh: '吸顶导航、表格表头', en: 'Sticky headers, table headers' }]
+          ]
+        } },
+        { h: { zh: '绝对定位真正的代价：它同时拿走三样东西', en: 'The real cost of absolute positioning: it takes away three things' } },
+        { ul: [
+          { zh: '<b>不占位</b>：其他元素不会为它让路，所以它与内容重叠几乎是必然的——只要内容长度变化。', en: '<b>It takes no space</b>: siblings do not make room for it, so overlap is almost guaranteed as soon as content length changes.' },
+          { zh: '<b>失去父元素的高度贡献</b>：父元素若没有其他内容，高度会塌成 0。', en: '<b>It stops contributing height to its parent</b>: with no other content the parent collapses to zero.' },
+          { zh: '<b>宽度收缩到内容</b>：除非显式写 <code>inset</code> 或宽度，绝对定位元素不会自动撑满，长内容会溢出。', en: '<b>Its width shrinks to content</b>: unless you set <code>inset</code> or a width, an absolutely positioned box does not fill anything, so long content overflows.' }
+        ] },
+        { h: { zh: '层叠上下文：为什么 z-index 有时"不生效"', en: 'Stacking contexts: why z-index sometimes "does not work"' } },
+        { p: {
+          zh: '<code>z-index</code> 只在<b>同一个层叠上下文</b>内比较。而很多属性会<b>创建</b>新的层叠上下文：<code>position</code> 非 static 且 z-index 非 auto、<code>opacity &lt; 1</code>、<code>transform</code> 非 none、<code>filter</code>、<code>will-change</code>、<code>isolation: isolate</code> 等。一旦父元素因为 <code>transform</code> 或 <code>opacity</code> 创建了层叠上下文，子元素的 <code>z-index: 9999</code> 就<b>再也盖不过父元素的兄弟</b>了。',
+          en: '<code>z-index</code> is only compared <b>within one stacking context</b>. Many properties <b>create</b> a new stacking context: <code>position</code> other than static with a non-auto z-index, <code>opacity &lt; 1</code>, non-none <code>transform</code>, <code>filter</code>, <code>will-change</code>, <code>isolation: isolate</code> and more. Once a parent creates a stacking context via <code>transform</code> or <code>opacity</code>, a child’s <code>z-index: 9999</code> can <b>never</b> escape above the parent’s siblings.'
+        } },
+        { h: { zh: 'sticky 为什么经常"失效"', en: 'Why sticky so often "does not work"' } },
+        { ul: [
+          { zh: '祖先元素有 <code>overflow: hidden / auto / scroll</code>：sticky 被限制在那个滚动容器里，看起来像没生效。', en: 'An ancestor has <code>overflow: hidden / auto / scroll</code>: sticky is confined to that scroll container and appears dead.' },
+          { zh: '没有指定 <code>top</code>（或 <code>bottom</code>）：sticky 需要一个"门槛值"才知道何时开始吸附。', en: 'No <code>top</code> (or <code>bottom</code>) is set: sticky needs a threshold to know when to stick.' },
+          { zh: '父元素高度等于自身高度（常见于 flex 的 <code>align-items: center</code>）：元素没有可移动的余地。', en: 'The parent is exactly as tall as the element itself (common with flex <code>align-items: center</code>): there is no room to move.' },
+          { zh: '被后续兄弟元素盖住：sticky 元素没有创建层叠上下文时，后出现的兄弟可能盖在它上面。', en: 'A later sibling paints over it: without its own stacking context the sticky element can be covered by a later sibling.' }
+        ] },
+        { note: {
+          zh: '<b>判断口诀</b>：sticky = "在父元素的<b>地盘内</b>，跟着滚动容器吸附"。所以问三个问题：滚动容器是谁（有没有 overflow）？吸附门槛是多少（top）？父元素的地盘有多大（高度是否足够）？这三个问题的答案决定了它能不能工作。',
+          en: '<b>Rule of thumb</b>: sticky means "stick within the parent’s <b>territory</b>, following the scrolling ancestor". So ask three questions: who is the scroller (any overflow)? What is the threshold (top)? How big is the parent’s territory (enough height)? Those three answers decide whether it works.'
+        } },
+        { case: {
+          title: { zh: '案例诊断：吸顶导航"时好时坏"', en: 'Case diagnosis: a sticky nav that works "sometimes"' },
+          zh: 'v1 把导航包在一个 <code>.page-wrap { overflow: hidden }</code> 里（本意是防止横向溢出），结果 <code>position: sticky</code> 完全失效。开发者改成 <code>position: fixed</code>，问题更大：fixed 脱离文档流，导航高度不再撑开页面，首屏内容被盖住，只能靠 <code>margin-top</code> 手工补。<b>正解</b>：去掉那个 <code>overflow: hidden</code>（改用 <code>overflow-x: clip</code>），保留 sticky——它既参与正常流（不遮盖内容），又能吸附。',
+          en: 'v1 wraps the nav in <code>.page-wrap { overflow: hidden }</code> (intended to prevent horizontal overflow), which kills <code>position: sticky</code> entirely. Switching to <code>position: fixed</code> is worse: fixed leaves normal flow, so the nav no longer pushes the page down, the first screen sits under it and you have to patch it with <code>margin-top</code>. <b>The fix</b>: remove that <code>overflow: hidden</code> (use <code>overflow-x: clip</code> instead) and keep sticky — it stays in normal flow, so it never covers content, yet it still sticks.'
+        } }
+      ],
+      code: [
+        {
+          title: { zh: '关键代码 ① 吸顶导航：五条约束缺一不可', en: 'Key code ① A sticky header: five constraints, all required' },
+          purpose: {
+            zh: 'sticky 的失效几乎总是"环境问题"而不是 sticky 本身的问题。',
+            en: 'When sticky fails it is almost always an environment problem, not a sticky problem.'
+          },
+          lang: 'css',
+          code: {
+            zh: `.site-header {
+  /* ⭐ 关键点 ①：门槛值必须有，否则元素不知道何时开始吸附 */
+  position: sticky;
+  top: 0;
+
+  /* ⭐ 关键点 ②：自己建立层叠上下文，防止被后续兄弟盖住 */
+  z-index: 10;
+  background: #fff;          /* 没有底色，滚动时内容会从下面"透"上来 */
+
+  /* ⭐ 关键点 ③：吸顶元素不要用 transform 定位祖先无关，
+     但祖先若有 transform，fixed 会改为相对它定位（sticky 不受影响，但排查时要知道） */
+}
+
+/* ⭐ 关键点 ④：祖先链上不能有 overflow: hidden/auto/scroll */
+.page { overflow-x: clip; }   /* 用 clip 代替 hidden：不会创建滚动容器，sticky 依然有效 */
+/* ❌ .page { overflow: hidden; }  → sticky 直接失效 */`,
+            en: `.site-header {
+  /* ⭐ Key point ①: the threshold is mandatory, or the element never knows when to stick */
+  position: sticky;
+  top: 0;
+
+  /* ⭐ Key point ②: create your own stacking context so later siblings cannot paint over you */
+  z-index: 10;
+  background: #fff;          /* without a background, content shows through while scrolling */
+
+  /* ⭐ Key point ③: a transformed ancestor does not break sticky but does break fixed —
+     know this when debugging which of the two you are looking at */
+}
+
+/* ⭐ Key point ④: no overflow: hidden/auto/scroll anywhere in the ancestor chain */
+.page { overflow-x: clip; }   /* use clip instead of hidden: no scroll container, so sticky still works */
+/* ❌ .page { overflow: hidden; }  → sticky dies immediately */`
+          },
+          points: {
+            zh: '<code>overflow-x: clip</code> 是近年的重要补充：它能防止横向溢出，却<b>不创建滚动容器</b>，因此不会破坏 sticky 和 <code>position: fixed</code> 的包含块。这也解释了为什么"用 <code>overflow: hidden</code> 兜住横向溢出"是个坏习惯——它会在别处引发 sticy 失效。<b>坑</b>：<code>clip</code> 不能滚动，所以如果你真的需要滚动，那要用 <code>auto</code> 并接受 sticky 被限制在容器内。',
+            en: '<code>overflow-x: clip</code> is an important recent addition: it prevents horizontal overflow while <b>not creating a scroll container</b>, so it neither breaks sticky nor changes the containing block for <code>position: fixed</code>. That is why "wrap everything in <code>overflow: hidden</code>" is a bad habit — it breaks sticky somewhere else. <b>Pitfall</b>: <code>clip</code> cannot scroll, so if you genuinely need scrolling, use <code>auto</code> and accept that sticky is confined to the container.'
+          }
+        },
+        {
+          title: { zh: '关键代码 ② 绝对定位只用于"装饰与浮层"', en: 'Key code ② Reserve absolute positioning for decoration and overlays' },
+          purpose: {
+            zh: '把"绝对定位"限定在不会影响其他内容位置的地方，代价就消失了。',
+            en: 'Confine absolute positioning to places that cannot move other content, and the cost disappears.'
+          },
+          lang: 'css',
+          code: {
+            zh: `.card {
+  /* ⭐ 关键点 ⑤：父元素成为定位参照（仅此一处需要 relative） */
+  position: relative;
+}
+
+.card__badge {
+  /* ⭐ 关键点 ⑥：装饰性元素不参与排版，重叠也不会挤坏内容 */
+  position: absolute;
+  inset-block-start: var(--space-3);
+  inset-inline-end: var(--space-3);
+  /* 用逻辑属性 inset-*，而不是 top/right —— 书写方向变化时自动跟随 */
+  pointer-events: none;      /* 装饰物不该抢走点击 */
+}
+
+/* ⭐ 关键点 ⑦：需要"覆盖一层"时，用 grid 让两者落在同一个格子，而不是绝对定位 */
+.hero { display: grid; }
+.hero > * { grid-area: 1 / 1; }   /* 图片与文字叠在同一格，且都参与排版 */`,
+            en: `.card {
+  /* ⭐ Key point ⑤: the card becomes the positioning reference (the one place relative is needed) */
+  position: relative;
+}
+
+.card__badge {
+  /* ⭐ Key point ⑥: decoration takes no part in layout, so overlap cannot break the content */
+  position: absolute;
+  inset-block-start: var(--space-3);
+  inset-inline-end: var(--space-3);
+  /* logical inset-* instead of top/right — follows the writing direction automatically */
+  pointer-events: none;      /* decoration should not steal clicks */
+}
+
+/* ⭐ Key point ⑦: to overlay two things, stack them in one grid cell instead of using absolute */
+.hero { display: grid; }
+.hero > * { grid-area: 1 / 1; }   /* image and text share a cell and both stay in flow */`
+          },
+          points: {
+            zh: '最后一条是很有价值的技巧：<b>"叠放"未必需要绝对定位</b>。用 <code>grid-area: 1 / 1</code> 让两个元素落在同一格，它们仍然参与排版——父元素的高度由两者中更高的那个决定，而不是塌成 0。这在"图片上叠文字"的场景里比绝对定位健壮得多：文字变多时图片不会被压出容器。',
+            en: 'The last one is a valuable trick: <b>overlaying does not require absolute positioning</b>. Give both children <code>grid-area: 1 / 1</code> and they share a grid cell while remaining in flow — the parent is as tall as the taller child instead of collapsing to zero. For "text over image" this is far more robust than absolute positioning: more text never pushes the image out of its container.'
+          }
+        }
+      ],
+      demo: {
+        key: 'd-2-3',
+        hint: {
+          zh: '四种让 sticky 失效的经典场景，一个一个复现再修好；点"自动滚动测试"会真实滚动容器并测量导航是否吸顶；右侧显示层叠顺序与当前生效的定位规则。',
+          en: 'Four classic ways to break sticky, each reproducible and fixable. "Run scroll test" actually scrolls the container and measures whether the header pinned. The panel shows the paint order and which positioning rules are in effect.'
+        }
+      }
+    }
+  ]
+};
