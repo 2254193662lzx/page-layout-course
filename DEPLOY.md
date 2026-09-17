@@ -3,6 +3,20 @@
 > 站点是纯静态的（`docs/` 目录），不需要任何构建服务器。
 > 部署前先确认本地能构建：`node build.mjs`
 
+## 当前部署状态（已完成）
+
+| 项目 | 值 |
+|---|---|
+| 网站链接 | <https://2254193662lzx.github.io/page-layout-course/> |
+| 仓库地址 | <https://github.com/2254193662lzx/page-layout-course> |
+| Pages 配置 | 源：`main` 分支的 `/docs` 目录（`build_type: legacy`） |
+| 上线校验 | 8 个页面全部 HTTP 200；遍历 18 个小节 × 3 个 tab：**0 报错**、18/18 演示正常、320px 无横向滚动 |
+
+> 说明：仓库中的 `.github/workflows/deploy.yml`（Actions 自动发布）**未包含在首次提交里**，
+> 因为当前 `gh` OAuth 令牌只有 `repo` 权限、没有 `workflow` 权限，推送 workflow 文件会被 GitHub 拒绝。
+> 如需改用 Actions 方式自动发布，执行 `gh auth refresh -s workflow` 后把该文件加入提交即可；
+> 使用下面的方式一（main `/docs`）则完全不需要它。
+
 ---
 
 ## 方式一：`main` 分支的 `/docs` 目录（最简单，推荐）

@@ -1,5 +1,7 @@
 # 《页面布局之道》· The Art of Page Layout
 
+**在线访问：<https://2254193662lzx.github.io/page-layout-course/>** （源码仓库：<https://github.com/2254193662lzx/page-layout-course>）
+
 中英双语交互教学网站：**6 章 18 节**，每节含 **📖 讲解 / ⌨️ 关键代码 / ▶️ 演示** 三个 tab，
 **18 个可交互演示**全部从真实渲染结果量测数据（`getComputedStyle` / `getBoundingClientRect`），
 内容围绕**同一个贯穿案例 CourseHub**（一门在线课程主页）从 v1 改造到 v2 展开。
